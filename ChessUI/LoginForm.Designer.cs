@@ -46,6 +46,7 @@ namespace ChessUI
             this.usernameTextBox.Name = "usernameTextBox";
             this.usernameTextBox.Size = new System.Drawing.Size(179, 20);
             this.usernameTextBox.TabIndex = 0;
+            this.usernameTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(pressEnter);
             // 
             // usernameLabel
             // 
@@ -59,9 +60,10 @@ namespace ChessUI
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(15, 65);
-            this.textBox1.Name = "passwordTextbox";
+            this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(179, 20);
             this.textBox1.TabIndex = 2;
+            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(pressEnter);
             // 
             // passwordLabel
             // 
@@ -90,7 +92,7 @@ namespace ChessUI
             this.okButton.TabIndex = 5;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
-            okButton.Click += okButton_Click;
+            this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
             // LoginForm
             // 
@@ -118,31 +120,5 @@ namespace ChessUI
         private System.Windows.Forms.Label passwordLabel;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button okButton;
-        static void Login(TextBox user, TextBox pass)
-        {
-            try
-            {
-                string username = user.Text;
-                string password = pass.Text;
-                Console.Out.WriteLine(username);
-                Console.Out.WriteLine(password);
-
-                using (SqlConnection connection = new SqlConnection("Server=db-mysql-nyc3-70559-do-user-15626248-0.c.db.ondigitalocean.com,25060;Database=defaultdb;Uid=doadmin;Pwd=AVNS_N1ROU157CO2sVfX0Bd2;"))
-                {
-                    connection.Open();
-                    Console.Out.WriteLine("We connected");
-                }
-            }
-            catch (SqlException e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-            Console.WriteLine("\nDone. Press enter.");
-            Console.ReadLine();
-        }
-        private void okButton_Click(object sender, System.EventArgs e)
-        {
-            Login(usernameTextBox, textBox1);
-        }
     }
 }
