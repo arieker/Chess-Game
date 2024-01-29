@@ -1,4 +1,8 @@
-﻿namespace ChessUI
+﻿using System;
+using System.Data.SqlClient;
+using System.Windows.Forms;
+
+namespace ChessUI
 {
     partial class LoginForm
     {
@@ -42,6 +46,7 @@
             this.usernameTextBox.Name = "usernameTextBox";
             this.usernameTextBox.Size = new System.Drawing.Size(179, 20);
             this.usernameTextBox.TabIndex = 0;
+            this.usernameTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(pressEnter);
             // 
             // usernameLabel
             // 
@@ -58,6 +63,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(179, 20);
             this.textBox1.TabIndex = 2;
+            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(pressEnter);
             // 
             // passwordLabel
             // 
@@ -86,6 +92,7 @@
             this.okButton.TabIndex = 5;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
             // LoginForm
             // 
