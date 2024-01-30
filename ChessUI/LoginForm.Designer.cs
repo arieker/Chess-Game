@@ -34,7 +34,7 @@ namespace ChessUI
         {
             this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.usernameLabel = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.passwordLabel = new System.Windows.Forms.Label();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
@@ -46,7 +46,7 @@ namespace ChessUI
             this.usernameTextBox.Name = "usernameTextBox";
             this.usernameTextBox.Size = new System.Drawing.Size(179, 20);
             this.usernameTextBox.TabIndex = 0;
-            this.usernameTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(pressEnter);
+            this.usernameTextBox.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
             // 
             // usernameLabel
             // 
@@ -57,13 +57,13 @@ namespace ChessUI
             this.usernameLabel.TabIndex = 1;
             this.usernameLabel.Text = "Username";
             // 
-            // textBox1
+            // passwordTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(15, 65);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(179, 20);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(pressEnter);
+            this.passwordTextBox.Location = new System.Drawing.Point(15, 65);
+            this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.Size = new System.Drawing.Size(179, 20);
+            this.passwordTextBox.TabIndex = 2;
+            this.passwordTextBox.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
             // 
             // passwordLabel
             // 
@@ -96,17 +96,18 @@ namespace ChessUI
             // 
             // LoginForm
             // 
+            this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(295, 173);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.passwordLabel);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.passwordTextBox);
             this.Controls.Add(this.usernameLabel);
             this.Controls.Add(this.usernameTextBox);
             this.Name = "LoginForm";
-            this.Text = "LoginForm";
+            this.Text = "Login/Register Account";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -116,7 +117,7 @@ namespace ChessUI
 
         private System.Windows.Forms.TextBox usernameTextBox;
         private System.Windows.Forms.Label usernameLabel;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox passwordTextBox;
         private System.Windows.Forms.Label passwordLabel;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button okButton;
