@@ -3,18 +3,18 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-public class ChessboardForm : Form
+public class ChessBoardForm : Form
 {
     private const int boardSize = 8;
     private const int squareSize = 85;
     private readonly Piece[,] board = new Piece[boardSize, boardSize];
     private readonly Image[,] pieceImages = new Image[6, 2]; // 6 types of pieces x 2 colors
 
-    public ChessboardForm()
+    public ChessBoardForm()
     {
         LoadPieceImages(); // Load piece images
         InitializeBoard();
-        this.MouseClick += ChessboardForm_MouseClick;
+        this.MouseClick += ChessBoardForm_MouseClick;
     }
 
     private void LoadPieceImages()
@@ -26,7 +26,7 @@ public class ChessboardForm : Form
             {
                 string fileName = $"{type.ToString().ToLower()}_{color.ToString().ToLower()}.png";
                 string filePath = Path.Combine(Environment.CurrentDirectory, fileName);
-                pieceImages[(int)type, (int)color] = Image.FromFile(filePath);
+                pieceImages[(int)type, (int)color] = Image.FromFile(filePath); // If your code errors at this line, you don't have the assets (images) for chess pieces
             }
         }
     }
@@ -95,7 +95,7 @@ public class ChessboardForm : Form
         }
     }
 
-    private void ChessboardForm_MouseClick(object sender, MouseEventArgs e)
+    private void ChessBoardForm_MouseClick(object sender, MouseEventArgs e)
     {
         int row = e.Y / squareSize;
         int col = e.X / squareSize;
@@ -105,12 +105,16 @@ public class ChessboardForm : Form
         this.Invalidate(); // Redraw the chessboard
     }
 
-    [STAThread]
-    static void Main()
+    private void InitializeComponent()
     {
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
-        Application.Run(new ChessboardForm());
+            this.SuspendLayout();
+            // 
+            // ChessBoardForm
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Name = "ChessBoardForm";
+            this.ResumeLayout(false);
+
     }
 }
 
