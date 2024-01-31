@@ -29,5 +29,17 @@ namespace ChessUI
         {
             this.Close();
         }
+
+        private void textBoxes_TextChanged(object sender, EventArgs e)
+        {
+            if (usernameTextBox.Text.Length > 0 && passwordTextBox.Text.Length > 0 && confirmPasswordTextBox.Text.Length > 0)
+            {
+                okButton.Enabled = true;
+            }
+            else
+            {
+                okButton.Enabled = false;
+            }
+        }
     }
 }

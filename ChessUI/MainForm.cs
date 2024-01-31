@@ -37,6 +37,26 @@ namespace ChessUI
             }
         }
 
+        private void registerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RegisterForm register_form = new RegisterForm();
+
+            if (register_form.ShowDialog() == DialogResult.OK)
+            {
+                // The user has successfully logged in
+                if (Program.currentUser.getStatus() != "Online")
+                {
+                    return;
+                }
+
+                // UI Changes after Successful Login
+                loginToolStripMenuItem.Visible = false; // Login Invisible
+                registerToolStripMenuItem.Visible = false; // Register Invisible
+                findMatchToolStripMenuItem.Visible = true; // Play Online Visible
+                editOrViewProfileToolStripMenuItem.Visible = true; // Edit/View Profile Visible
+            }
+        }
+
         private void findMatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FindMatchForm find_match_form = new FindMatchForm();
@@ -60,9 +80,9 @@ namespace ChessUI
             // Open a new form where you can view and edit your profile, don't know if we need anything other than a username and password but for more points in this class (I want an A) maybe we should tryhard
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-
+            // For nick :)
         }
     }
 }
