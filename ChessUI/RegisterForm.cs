@@ -1,18 +1,22 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace ChessUI
 {
     public partial class RegisterForm : Form
     {
-        public static bool IsLoggedIn { get; set; } // Technically bad practice to be public but idrc feel free to change this
 
         public RegisterForm()
         {
@@ -22,7 +26,47 @@ namespace ChessUI
 
         private void okButton_Click(object sender, EventArgs e)
         {
+            string username = usernameTextBox.Text;
+            string password = passwordTextBox.Text;
+            string passwordMatch = confirmPasswordTextBox.Text;
+            if (password != passwordMatch)
+            {
+                MessageBox.Show("Passwords do not match.");
+                passwordTextBox.Clear();
+                confirmPasswordTextBox.Clear();
+            }
+            try
+            {
+                MySqlConnection con;
 
+                using (con = new MySqlConnection())
+                {
+                    con.ConnectionString = ConfigurationManager.ConnectionStrings["users"].ConnectionString;
+                    con.Open();
+                    MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + username + "'", con);
+                    MySqlDataReader dr = command.ExecuteReader();
+                    if (dr.Read())
+                    {
+                        MessageBox.Show("This username is already taken.");
+                        passwordTextBox.Clear();
+                        confirmPasswordTextBox.Clear();
+                        usernameTextBox.Clear();
+                    }
+                    else
+                    {
+                        dr.Close();
+                        MySqlCommand insertcommand = new MySqlCommand("INSERT INTO `login`.`users` (`username`, `password`, `nickname`, `wins`, `losses`, `draws`, `opendate`, `status`) VALUES ('" + username + "', '" + password.GetHashCode() + "', '', '0', '0', '0', '" + DateTime.Now.Date.ToString("dd/MM/yyyy") + "', 'Offline');", con);
+                        MySqlDataReader dr2 = insertcommand.ExecuteReader();
+                        MessageBox.Show("Account successfully created.");
+                        this.Close();
+                    }
+                    con.Close();
+                }
+            }
+            catch (SqlException er)
+            {
+                Console.WriteLine(er.ToString());
+            }
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -40,6 +84,11 @@ namespace ChessUI
             {
                 okButton.Enabled = false;
             }
+        }
+
+        private void RegisterForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

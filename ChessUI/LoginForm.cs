@@ -36,7 +36,7 @@ namespace ChessUI
             try
             {
                 string username = user.Text;
-                string password = pass.Text;
+                string password = pass.Text.GetHashCode().ToString();
                 MySqlConnection con;
 
                 using (con = new MySqlConnection())
@@ -67,6 +67,10 @@ namespace ChessUI
                             User currentUser = new User(dr[0].ToString(), dr[2].ToString(), Int32.Parse(dr[3].ToString()), Int32.Parse(dr[4].ToString()), Int32.Parse(dr[5].ToString()), dr[6].ToString(), dr[7].ToString());
                             Program.currentUser = currentUser;
                         }
+                        dr.Close();
+                        MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `status` = 'Online' WHERE (`username` = '" + username + "');", con);
+                        MySqlDataReader dr2 = onlinecommand.ExecuteReader();
+                        Program.currentUser.setStatus("Online");
                         con.Close();
                         return true;
                     }

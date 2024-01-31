@@ -57,6 +57,7 @@
             // 
             // passwordTextBox
             // 
+            this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Location = new System.Drawing.Point(15, 65);
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.Size = new System.Drawing.Size(179, 20);
@@ -77,7 +78,7 @@
             this.cancelButton.Location = new System.Drawing.Point(200, 177);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cancelButton.TabIndex = 4;
+            this.cancelButton.TabIndex = 5;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
@@ -103,10 +104,11 @@
             // 
             // confirmPasswordTextBox
             // 
+            this.confirmPasswordTextBox.PasswordChar = '*';
             this.confirmPasswordTextBox.Location = new System.Drawing.Point(15, 105);
             this.confirmPasswordTextBox.Name = "confirmPasswordTextBox";
             this.confirmPasswordTextBox.Size = new System.Drawing.Size(179, 20);
-            this.confirmPasswordTextBox.TabIndex = 6;
+            this.confirmPasswordTextBox.TabIndex = 4;
             this.confirmPasswordTextBox.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
             // 
             // RegisterForm
@@ -125,6 +127,7 @@
             this.Controls.Add(this.usernameTextBox);
             this.Name = "RegisterForm";
             this.Text = "Register";
+            this.Load += new System.EventHandler(this.RegisterForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

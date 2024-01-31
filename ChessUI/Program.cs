@@ -33,7 +33,7 @@ namespace ChessUI
             this.opendate = opendate;
         }
 
-        void Login()
+        public void Login()
         {
             try
             {
@@ -55,7 +55,7 @@ namespace ChessUI
             }
         }
 
-        void Logout()
+        public void Logout()
         {
             try
             {
@@ -119,6 +119,11 @@ namespace ChessUI
         public void setNickname(string name)
         {
             this.nickname = name;
+        }
+
+        public void setStatus(string status)
+        {
+            this.status = status;
         }
 
     }

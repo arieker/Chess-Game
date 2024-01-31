@@ -61,21 +61,21 @@
             // loginToolStripMenuItem
             // 
             this.loginToolStripMenuItem.Name = "loginToolStripMenuItem";
-            this.loginToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loginToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.loginToolStripMenuItem.Text = "Login";
             this.loginToolStripMenuItem.Click += new System.EventHandler(this.loginToolStripMenuItem_Click);
             // 
             // registerToolStripMenuItem
             // 
             this.registerToolStripMenuItem.Name = "registerToolStripMenuItem";
-            this.registerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.registerToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.registerToolStripMenuItem.Text = "Register";
             this.registerToolStripMenuItem.Click += new System.EventHandler(this.registerToolStripMenuItem_Click);
             // 
             // editOrViewProfileToolStripMenuItem
             // 
             this.editOrViewProfileToolStripMenuItem.Name = "editOrViewProfileToolStripMenuItem";
-            this.editOrViewProfileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editOrViewProfileToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.editOrViewProfileToolStripMenuItem.Text = "Edit/View Profile";
             this.editOrViewProfileToolStripMenuItem.Visible = false;
             this.editOrViewProfileToolStripMenuItem.Click += new System.EventHandler(this.editOrViewProfileToolStripMenuItem_Click);
@@ -98,6 +98,7 @@
             this.Name = "MainForm";
             this.Text = "Chess!";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
