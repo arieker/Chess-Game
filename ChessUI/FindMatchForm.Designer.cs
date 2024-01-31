@@ -41,6 +41,7 @@
             this.onlineUsersListBox.Name = "onlineUsersListBox";
             this.onlineUsersListBox.Size = new System.Drawing.Size(189, 225);
             this.onlineUsersListBox.TabIndex = 0;
+            this.onlineUsersListBox.SelectedIndexChanged += new System.EventHandler(this.onlineUsersListBox_SelectedIndexChanged);
             // 
             // refreshButton
             // 

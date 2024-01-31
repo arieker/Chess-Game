@@ -24,11 +24,11 @@ namespace ChessUI
             if (login_form.ShowDialog() == DialogResult.OK)
             {
                 // The user has successfully logged in
-                if (!LoginForm.IsLoggedIn)
+                if (Program.currentUser.getStatus() != "Online")
                 {
                     return;
                 }
-                Console.Out.WriteLine("Form1 recognized IsLoggedIn as true");
+
                 // UI Changes after Successful Login
                 loginToolStripMenuItem.Visible = false; // Login Invisible
                 findMatchToolStripMenuItem.Visible = true; // Play Online Visible
@@ -57,6 +57,11 @@ namespace ChessUI
         private void editOrViewProfileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Open a new form where you can view and edit your profile, don't know if we need anything other than a username and password but for more points in this class (I want an A) maybe we should tryhard
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

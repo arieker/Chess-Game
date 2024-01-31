@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -13,13 +14,11 @@ using MySql;
 using MySql.Data.MySqlClient;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
-
 namespace ChessUI
 {
     public partial class LoginForm : Form
     {
 
-        public static bool IsLoggedIn { get; set; } // Technically bad practice to be public but idrc feel free to change this
 
         public LoginForm()
         {
@@ -38,8 +37,6 @@ namespace ChessUI
             {
                 string username = user.Text;
                 string password = pass.Text;
-
-                string connstring = "Server=db-mysql-nyc3-70559-do-user-15626248-0.c.db.ondigitalocean.com;Port=25060;Database=login;Uid=doadmin;Pwd=AVNS_vrWwNwI19lugI3fo-6y;";
                 MySqlConnection con;
 
                 using (con = new MySqlConnection())
@@ -50,15 +47,27 @@ namespace ChessUI
                     // If username is not unique say an account already exists, password is invalid.
                     // In a dream world, you can tell the user that the username is unique as they type it like a real website. If this is possible that'd be cool :) but this form is your baby, I won't touch it too much
                     // p.s. make sure u limit the length of usernames to something respectable and don't let them use characters that might cause issues like 漢字 even tho they prob wont cause issues
-                    con.ConnectionString = connstring;
+                    con.ConnectionString = ConfigurationManager.ConnectionStrings["users"].ConnectionString;
                     con.Open();
                     MySqlDataAdapter da = new MySqlDataAdapter(new MySqlCommand("SELECT COUNT(*) FROM users WHERE username='" + username + "' AND password='" + password + "'", con));
                     DataTable loginTable = new DataTable();
                     da.Fill(loginTable);
+
+                    // checks if username and password holds a valid entry
                     if (loginTable.Rows[0][0].ToString() == "1")
                     {
                         MessageBox.Show("Logged in Successfully");
                         Console.Out.WriteLine("Logged in Successfully");
+
+                        // set currentuser static variable
+                        MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + username + "'", con);
+                        MySqlDataReader dr = command.ExecuteReader();
+                        if (dr.Read())
+                        {
+                            User currentUser = new User(dr[0].ToString(), dr[2].ToString(), Int32.Parse(dr[3].ToString()), Int32.Parse(dr[4].ToString()), Int32.Parse(dr[5].ToString()), dr[6].ToString(), dr[7].ToString());
+                            Program.currentUser = currentUser;
+                        }
+                        con.Close();
                         return true;
                     }
                     else
@@ -66,20 +75,20 @@ namespace ChessUI
                         MessageBox.Show("Invalid username or password");
                         pass.Clear();
                     }
+                    con.Close();
                 }
             }
             catch (SqlException e)
             {
                 Console.WriteLine(e.ToString());
             }
+
             return false; // Catch
         }
         private void okButton_Click(object sender, EventArgs e)
         {
             if (Login(usernameTextBox, passwordTextBox))
             {
-                IsLoggedIn = true;
-                Console.Out.WriteLine("IsLoggedIn set to true");
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
