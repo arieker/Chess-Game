@@ -37,6 +37,7 @@ namespace ChessUI
                 registerToolStripMenuItem.Visible = false; // Register Invisible
                 findMatchToolStripMenuItem.Visible = true; // Play Online Visible
                 editOrViewProfileToolStripMenuItem.Visible = true; // Edit/View Profile Visible
+                logoutToolStripMenuItem.Visible = true; // Logout Visible
             }
         }
 
@@ -57,6 +58,7 @@ namespace ChessUI
                 registerToolStripMenuItem.Visible = false; // Register Invisible
                 findMatchToolStripMenuItem.Visible = true; // Play Online Visible
                 editOrViewProfileToolStripMenuItem.Visible = true; // Edit/View Profile Visible
+                logoutToolStripMenuItem.Visible = true; // Logout Visible
             }
         }
 
@@ -88,9 +90,17 @@ namespace ChessUI
             Program.currentUser.Logout();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Program.currentUser.Logout();
+            MessageBox.Show("Successfully logged out");
 
+            // UI Changes after Successful Logout
+            loginToolStripMenuItem.Visible = true; // Login Visible
+            registerToolStripMenuItem.Visible = true; // Register Visible
+            findMatchToolStripMenuItem.Visible = false; // Play Online Invisible
+            editOrViewProfileToolStripMenuItem.Visible = false; // Edit/View Profile Invisible
+            logoutToolStripMenuItem.Visible = false; // Logout Invisible
         }
     }
 }
