@@ -59,6 +59,7 @@ namespace ChessUI
             // 
             // passwordTextBox
             // 
+            this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Location = new System.Drawing.Point(15, 65);
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.Size = new System.Drawing.Size(179, 20);
