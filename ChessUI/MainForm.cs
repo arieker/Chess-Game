@@ -31,6 +31,7 @@ namespace ChessUI
 
                 // UI Changes after Successful Login
                 loginToolStripMenuItem.Visible = false; // Login Invisible
+                registerToolStripMenuItem.Visible = false; // Register Invisible
                 findMatchToolStripMenuItem.Visible = true; // Play Online Visible
                 editOrViewProfileToolStripMenuItem.Visible = true; // Edit/View Profile Visible
             }
