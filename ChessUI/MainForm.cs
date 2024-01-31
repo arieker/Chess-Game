@@ -11,6 +11,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+// PLEASE READ
+// Try to name all forms like so MainForm, LoginForm, ChessBoardForm
+// Name every object of forms in lowercase with _ before "form" login_form, chessboard_form
+// This variable naming makes it extremely easy to differentiate quickly, and is very good practice
+
 namespace ChessUI
 {
     public partial class MainForm : Form
@@ -101,6 +106,14 @@ namespace ChessUI
             findMatchToolStripMenuItem.Visible = false; // Play Online Invisible
             editOrViewProfileToolStripMenuItem.Visible = false; // Edit/View Profile Invisible
             logoutToolStripMenuItem.Visible = false; // Logout Invisible
+        }
+
+        // Temporary function and button, this should be deleted in the future, or not merged with master
+        private void openBoardButton_Click(object sender, EventArgs e)
+        {
+            ChessBoardForm chessboard_form = new ChessBoardForm();
+
+            chessboard_form.ShowDialog();
         }
     }
 }
