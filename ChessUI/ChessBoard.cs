@@ -24,9 +24,11 @@ public class ChessBoardForm : Form
         {
             for (PieceType type = PieceType.Pawn; type <= PieceType.King; type++)
             {
-                string fileName = $"{type.ToString().ToLower()}_{color.ToString().ToLower()}.png";
-                string filePath = Path.Combine(Environment.CurrentDirectory, fileName);
-                pieceImages[(int)type, (int)color] = Image.FromFile(filePath); // If your code errors at this line, you don't have the assets (images) for chess pieces
+                string filePath = "Set this to the assets folder that's inside ChessUI project folder, I tried doing it didn't work for me i have no idea why";
+
+                pieceImages[(int)type, (int)color] = Image.FromFile(filePath); // Please fix, read above string!
+
+
             }
         }
     }

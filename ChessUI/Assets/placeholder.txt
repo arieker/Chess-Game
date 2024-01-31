@@ -1,1 +1,0 @@
-This is just here so that the folder commits to git, please delete it as you add the chess piece assets

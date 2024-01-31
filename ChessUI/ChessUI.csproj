@@ -165,9 +165,19 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="Assets\placeholder.txt" />
+    <Content Include="Assets\bishop_black.png" />
+    <Content Include="Assets\bishop_white.png" />
+    <Content Include="Assets\king_black.png" />
+    <Content Include="Assets\king_white.png" />
+    <Content Include="Assets\knight_black.png" />
+    <Content Include="Assets\knight_white.png" />
+    <Content Include="Assets\pawn_black.png" />
+    <Content Include="Assets\pawn_white.png" />
+    <Content Include="Assets\queen_black.png" />
+    <Content Include="Assets\queen_white.png" />
+    <Content Include="Assets\rook_black.png" />
+    <Content Include="Assets\rook_white.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
