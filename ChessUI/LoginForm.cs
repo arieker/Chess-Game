@@ -18,7 +18,6 @@ namespace ChessUI
 {
     public partial class LoginForm : Form
     {
-
         public static bool IsLoggedIn { get; set; } // Technically bad practice to be public but idrc feel free to change this
 
         public LoginForm()

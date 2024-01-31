@@ -28,9 +28,30 @@ namespace ChessUI
                 {
                     return;
                 }
-                Console.Out.WriteLine("Form1 recognized IsLoggedIn as true");
+                Console.Out.WriteLine("MainForm recognized IsLoggedIn as true");
                 // UI Changes after Successful Login
                 loginToolStripMenuItem.Visible = false; // Login Invisible
+                registerToolStripMenuItem.Visible = false; // Register Invisible
+                findMatchToolStripMenuItem.Visible = true; // Play Online Visible
+                editOrViewProfileToolStripMenuItem.Visible = true; // Edit/View Profile Visible
+            }
+        }
+
+        private void registerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RegisterForm register_form = new RegisterForm();
+
+            if (register_form.ShowDialog() == DialogResult.OK)
+            {
+                // The user has successfully logged in
+                if (!RegisterForm.IsLoggedIn)
+                {
+                    return;
+                }
+                Console.Out.WriteLine("MainForm recognized IsLoggedIn as true");
+                // UI Changes after Successful Login
+                loginToolStripMenuItem.Visible = false; // Login Invisible
+                registerToolStripMenuItem.Visible = false; // Register Invisible
                 findMatchToolStripMenuItem.Visible = true; // Play Online Visible
                 editOrViewProfileToolStripMenuItem.Visible = true; // Edit/View Profile Visible
             }

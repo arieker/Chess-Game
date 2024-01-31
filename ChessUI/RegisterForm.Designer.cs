@@ -1,10 +1,6 @@
-﻿using System;
-using System.Data.SqlClient;
-using System.Windows.Forms;
-
-namespace ChessUI
+﻿namespace ChessUI
 {
-    partial class LoginForm
+    partial class RegisterForm
     {
         /// <summary>
         /// Required designer variable.
@@ -46,7 +42,6 @@ namespace ChessUI
             this.usernameTextBox.Name = "usernameTextBox";
             this.usernameTextBox.Size = new System.Drawing.Size(179, 20);
             this.usernameTextBox.TabIndex = 0;
-            this.usernameTextBox.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
             // 
             // usernameLabel
             // 
@@ -63,7 +58,6 @@ namespace ChessUI
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.Size = new System.Drawing.Size(179, 20);
             this.passwordTextBox.TabIndex = 2;
-            this.passwordTextBox.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
             // 
             // passwordLabel
             // 
@@ -94,7 +88,7 @@ namespace ChessUI
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
-            // LoginForm
+            // RegisterForm
             // 
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -106,8 +100,8 @@ namespace ChessUI
             this.Controls.Add(this.passwordTextBox);
             this.Controls.Add(this.usernameLabel);
             this.Controls.Add(this.usernameTextBox);
-            this.Name = "LoginForm";
-            this.Text = "Login";
+            this.Name = "RegisterForm";
+            this.Text = "Register";
             this.ResumeLayout(false);
             this.PerformLayout();
 
