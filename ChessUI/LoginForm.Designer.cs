@@ -44,7 +44,7 @@ namespace ChessUI
             // 
             this.usernameTextBox.Location = new System.Drawing.Point(15, 25);
             this.usernameTextBox.Name = "usernameTextBox";
-            this.usernameTextBox.Size = new System.Drawing.Size(179, 20);
+            this.usernameTextBox.Size = new System.Drawing.Size(180, 20);
             this.usernameTextBox.TabIndex = 0;
             this.usernameTextBox.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
             // 
@@ -59,10 +59,10 @@ namespace ChessUI
             // 
             // passwordTextBox
             // 
-            this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Location = new System.Drawing.Point(15, 65);
             this.passwordTextBox.Name = "passwordTextBox";
-            this.passwordTextBox.Size = new System.Drawing.Size(179, 20);
+            this.passwordTextBox.PasswordChar = '*';
+            this.passwordTextBox.Size = new System.Drawing.Size(180, 20);
             this.passwordTextBox.TabIndex = 2;
             this.passwordTextBox.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
             // 
@@ -77,7 +77,7 @@ namespace ChessUI
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(208, 138);
+            this.cancelButton.Location = new System.Drawing.Point(197, 126);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 4;
@@ -87,7 +87,7 @@ namespace ChessUI
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(127, 138);
+            this.okButton.Location = new System.Drawing.Point(116, 126);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 5;
@@ -100,7 +100,7 @@ namespace ChessUI
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(295, 173);
+            this.ClientSize = new System.Drawing.Size(284, 161);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.passwordLabel);

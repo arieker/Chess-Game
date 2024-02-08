@@ -87,7 +87,9 @@ namespace ChessUI
 
         private void editOrViewProfileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Open a new form where you can view and edit your profile, don't know if we need anything other than a username and password but for more points in this class (I want an A) maybe we should tryhard
+            ProfileForm profile_form = new ProfileForm();
+
+            profile_form.ShowDialog();
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
