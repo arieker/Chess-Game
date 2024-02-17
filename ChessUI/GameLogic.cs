@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,37 +9,12 @@ using System.Windows.Forms.VisualStyles;
 
 namespace ChessUI
 {
-    internal class GameLogic
-    {
-        static void Main()
-        {
-            GameLoop chessGame = new GameLoop();
-            chessGame.Play();
-        }
-
-    }
-
-    public class GameLoop
-    {
-        private BoardLogic gameboard;
-
-        public GameLoop()
-        {
-            gameboard = new BoardLogic();
-        }
-
-        public void Play()
-        {
-            Console.WriteLine("Compiled");
-        }
-
-    }
 
     // Holds a bool if it is filled and if so with what piece. 
     public class Square
     {
-        public PieceLogic piece;
-        public bool isFilled;
+        public PieceLogic piece { get; set; }
+        public bool isFilled { get; set; }
 
         public Square(PieceLogic piece) 
         {
@@ -55,6 +30,24 @@ namespace ChessUI
             }
         }
     }
+    
+    /*
+     *  Y
+     * 7 |
+     * 6 |
+     * 5 |
+     * 4 |
+     * 3 |
+     * 2 |
+     * 1 | P | P | P | P | P | ...
+     * 0 | R | N | B | Q | K | ...   White
+     *     0   1   2   3   4   ...
+     *    ________________________________ X
+     * 
+     * 
+     * 
+     */
+    
     
     public class BoardLogic
     {
@@ -112,17 +105,108 @@ namespace ChessUI
             return LogicBoard[x, y].isFilled;
         }
 
-        public void DisplayBoard()
+        public bool move(int startX, int startY, int endX, int endY)
         {
-            // Display the current state of the chessboard
-            for (int row = 0; row < 8; row++)
+            // check if not filled then no piece to move
+            if (!LogicBoard[startX, startY].isFilled) return false;
+            
+            // check if valid move
+            if (LogicBoard[startX, startY].piece.isMoveValid(this, startX, startY, endX, endY)) 
             {
-                for (int col = 0; col < 8; col++)
+                //move pieces
+                LogicBoard[endX, endY].piece = LogicBoard[startX, startY].piece;
+                LogicBoard[endX, endY].isFilled = true;
+                LogicBoard[startX, startY].piece = null;
+                LogicBoard[startX, startY].isFilled = false;
+
+                // update first move var
+                if(LogicBoard[endX, endY].piece.FirstMove == false)
                 {
-                    Console.Write($" | {LogicBoard[row, col].piece.ToString()} | \t");
+                    LogicBoard[endX, endY].piece.FirstMove = true;
                 }
-                Console.WriteLine();
+
+                // if it is a pawn promote if necessary
+                if (LogicBoard[endX, endY].piece is PawnLogic) promote(endX, endY);
+
+                //return true
+                return true;
             }
+            // check if it is a  castle 
+            if(castle(startX, startY, endX, endY)) return true;
+
+            // if it is not return false
+            return false;
+        }
+
+        // sees if the move that just happend promotes a pawn and performs the promotion
+        private void promote(int x, int y)
+        {
+            // only pawns can promote
+            if (!(LogicBoard[x, y].piece is PawnLogic)) return;
+            
+            // check if it is black at end or white at end 
+            if (LogicBoard[x, y].piece.getIsWhite && y == 7)
+            {
+                // promote to a white queen
+                LogicBoard[x, y].piece = new QueenLogic(PieceColor.White);
+            }
+            else if( !(LogicBoard[x, y].piece.getIsWhite) && y == 0)
+            {
+                // promote to a black queen
+                LogicBoard[x, y].piece = new QueenLogic(PieceColor.Black);
+            }
+            
+            return;
+        }
+        
+        private bool castle(int startX, int startY, int endX, int endY)
+        {
+            // Check if they are trying to move the king
+            if(! (LogicBoard[startX, startY].piece is KingLogic)) return false;
+            
+            // Check if it is his first move
+            if (!(LogicBoard[startX, startY].piece.FirstMove)) return false;
+
+            // Check if he is moving the king 2 squares along the x axis
+            if( endY == startY && (Math.Abs(endX - startX) == 2))
+            {
+                // get the approiate rook
+                int rookY = startY;
+                int rookX;
+                int sign = 1;
+                if(startY > endY)
+                {
+                    rookX = 0;
+                }
+                else
+                {
+                    rookX = 7;
+                    sign = -1;
+                }
+
+                // check that there is a rook there
+                if (! (LogicBoard[rookX, rookY].piece is RookLogic)) return false;
+                // check that he hasn't moved
+                if (!(LogicBoard[rookX, rookY].piece.FirstMove)) return false;
+
+                // move both pieces to the correct spot
+                /// king first
+                LogicBoard[endX, endY].piece = LogicBoard[startX, startY].piece;
+                LogicBoard[endX, endY].isFilled = true;
+                LogicBoard[startX, startY].piece = null;
+                LogicBoard[startX, startY].isFilled = false;
+                LogicBoard[endX, endY].piece.FirstMove = true;
+                /// then rook
+                LogicBoard[endX + sign, endY].piece = LogicBoard[rookX, rookY].piece;
+                LogicBoard[endX + sign, endY].isFilled = true;
+                LogicBoard[rookX, rookY].piece = null;
+                LogicBoard[rookX, rookY].isFilled = false;
+                LogicBoard[endX + sign, endY].piece.FirstMove = true;
+
+                return true;
+            }
+
+            return false;
         }
     }
 
@@ -196,7 +280,6 @@ namespace ChessUI
         }
     }
 
-    //TODO UPDATE FIRSTMOVE var
     public class PawnLogic : PieceLogic
     {
         //Use constructor in abstract PieceLogic class
