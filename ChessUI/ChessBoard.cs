@@ -121,25 +121,67 @@ public class ChessBoardForm : Form
         }
     }
 
+    private Piece selectedPiece = null;
+    private Point selectedSquare = Point.Empty;
+
     private void ChessBoardForm_MouseClick(object sender, MouseEventArgs e)
     {
         int row = e.Y / squareSize;
         int col = e.X / squareSize;
 
-        // For demonstration, let's place a piece (e.g., a pawn) at the clicked position
-        board[row, col] = new Pawn(PieceColor.White, pieceImages[(int)PieceType.Pawn, (int)PieceColor.White]); // Change the piece type/color as needed
-        this.Invalidate(); // Redraw the chessboard
+        if (selectedPiece == null)
+        {
+            // If no piece is selected, check if there's a piece at the clicked position
+            if (board[row, col] != null)
+            {
+                // Select the piece at the clicked position
+                selectedPiece = board[row, col];
+                selectedSquare = new Point(col, row);
+            }
+        }
+        else
+        {
+            // If a piece is already selected, move the selected piece to the clicked position
+            if (IsValidMove(selectedSquare, new Point(col, row)))
+            {
+                // Move the selected piece to the destination square
+                board[row, col] = selectedPiece;
+                board[selectedSquare.Y, selectedSquare.X] = null;
+
+                // Reset selected piece and square
+                selectedPiece = null;
+                selectedSquare = Point.Empty;
+
+                // Redraw the chessboard
+                this.Invalidate();
+            }
+            else
+            {
+                // Invalid move, deselect the piece
+                selectedPiece = null;
+                selectedSquare = Point.Empty;
+            }
+        }
     }
+
+    private bool IsValidMove(Point source, Point destination)
+    {
+        // Implement your logic to check if the move is valid
+        // This can include checking piece-specific movement rules, collisions, etc.
+        // Return true if the move is valid, false otherwise
+        return true; // Placeholder, replace with your logic
+    }
+
 
     private void InitializeComponent()
     {
-            this.SuspendLayout();
-            // 
-            // ChessBoardForm
-            // 
-            this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Name = "ChessBoardForm";
-            this.ResumeLayout(false);
+        this.SuspendLayout();
+        // 
+        // ChessBoardForm
+        // 
+        this.ClientSize = new System.Drawing.Size(284, 261);
+        this.Name = "ChessBoardForm";
+        this.ResumeLayout(false);
 
     }
 }
