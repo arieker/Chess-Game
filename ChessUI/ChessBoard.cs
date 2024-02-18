@@ -166,22 +166,44 @@ public class ChessBoardForm : Form
 
     private bool IsValidMove(Point source, Point destination)
     {
-        // Implement your logic to check if the move is valid
-        // This can include checking piece-specific movement rules, collisions, etc.
-        // Return true if the move is valid, false otherwise
-        return true; // Placeholder, replace with your logic
+        // Check if the move is within the bounds of the board
+        if (destination.X < 0 || destination.X >= boardSize || destination.Y < 0 || destination.Y >= boardSize)
+        {
+            return false; // Destination square is outside the board
+        }
+
+        // Get the piece at the source square
+        Piece sourcePiece = board[source.Y, source.X];
+
+        // Checks there's a piece at the source square
+        if (sourcePiece == null)
+        {
+            return false; // no piece to move
+        }
+
+        // Checks destination square is empty or contains an opponent's piece
+        Piece destinationPiece = board[destination.Y, destination.X];
+        if (destinationPiece == null || destinationPiece.Color != sourcePiece.Color)
+        {
+            // Move valid if  destination square is empty or contains an opponent's piece
+            return true;
+        }
+
+        // Destination square contains a piece of the same color
+        return false;
     }
+
 
 
     private void InitializeComponent()
     {
-        this.SuspendLayout();
-        // 
-        // ChessBoardForm
-        // 
-        this.ClientSize = new System.Drawing.Size(284, 261);
-        this.Name = "ChessBoardForm";
-        this.ResumeLayout(false);
+            this.SuspendLayout();
+            // 
+            // ChessBoardForm
+            // 
+            this.ClientSize = new System.Drawing.Size(716, 359);
+            this.Name = "ChessBoardForm";
+            this.ResumeLayout(false);
 
     }
 }
