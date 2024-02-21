@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,16 +15,21 @@ namespace ChessUI
     {
         public ProfileForm(User user)
         {
+            Debug.Write(user.getWins());
+            Debug.Write(user.getLosses());
+            Debug.Write(""+ user.getDraws());
             InitializeComponent();
-            dataGridView1.ReadOnly = true;
-            usernameTextBox.Enabled = false;
-            openingDateTextBox.Enabled = false;
+
             usernameTextBox.SelectedText = user.getUsername();
             openingDateTextBox.SelectedText = user.getDate();
             if (Program.currentUser == user)
             {
                 // make the edit nickname button visible
             }
+            dataGridView1.Rows[0].Cells[0].Value = user.getWins();
+            dataGridView1.Rows[0].Cells[1].Value = user.getLosses();
+            dataGridView1.Rows[0].Cells[2].Value = user.getDraws();
+
         }
     }
 }
