@@ -34,6 +34,7 @@ namespace ChessUI
                 MessageBox.Show("Passwords do not match.");
                 passwordTextBox.Clear();
                 confirmPasswordTextBox.Clear();
+                return;
             }
             try
             {
@@ -42,7 +43,15 @@ namespace ChessUI
                 using (con = new MySqlConnection())
                 {
                     con.ConnectionString = ConfigurationManager.ConnectionStrings["users"].ConnectionString;
-                    con.Open();
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Connection for registration failed. Please try again.");
+                        return;
+                    }
                     MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + username + "'", con);
                     MySqlDataReader dr = command.ExecuteReader();
                     if (dr.Read())

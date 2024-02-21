@@ -12,9 +12,18 @@ namespace ChessUI
 {
     public partial class ProfileForm : Form
     {
-        public ProfileForm()
+        public ProfileForm(User user)
         {
             InitializeComponent();
+            dataGridView1.ReadOnly = true;
+            usernameTextBox.Enabled = false;
+            openingDateTextBox.Enabled = false;
+            usernameTextBox.SelectedText = user.getUsername();
+            openingDateTextBox.SelectedText = user.getDate();
+            if (Program.currentUser == user)
+            {
+                // make the edit nickname button visible
+            }
         }
     }
 }
