@@ -24,7 +24,7 @@ namespace ChessUI
             openingDateTextBox.SelectedText = user.getDate();
             if (Program.currentUser == user)
             {
-                // make the edit nickname button visible
+                changeNicknameButton.Enabled = true;
             }
             dataGridView1.Rows[0].Cells[0].Value = user.getWins();
             dataGridView1.Rows[0].Cells[1].Value = user.getLosses();

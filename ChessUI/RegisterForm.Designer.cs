@@ -57,9 +57,9 @@
             // 
             // passwordTextBox
             // 
-            this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Location = new System.Drawing.Point(15, 65);
             this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Size = new System.Drawing.Size(179, 20);
             this.passwordTextBox.TabIndex = 2;
             this.passwordTextBox.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
@@ -104,9 +104,9 @@
             // 
             // confirmPasswordTextBox
             // 
-            this.confirmPasswordTextBox.PasswordChar = '*';
             this.confirmPasswordTextBox.Location = new System.Drawing.Point(15, 105);
             this.confirmPasswordTextBox.Name = "confirmPasswordTextBox";
+            this.confirmPasswordTextBox.PasswordChar = '*';
             this.confirmPasswordTextBox.Size = new System.Drawing.Size(179, 20);
             this.confirmPasswordTextBox.TabIndex = 4;
             this.confirmPasswordTextBox.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
