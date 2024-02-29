@@ -6,7 +6,7 @@ using System.Windows.Forms;
 public class ChessBoardForm : Form
 {
     private const int boardSize = 8;
-    private const int squareSize = 85;
+    private const int squareSize = 100;
     private readonly Piece[,] board = new Piece[boardSize, boardSize];
     private readonly Image[,] pieceImages = new Image[6, 2]; // 6 types of pieces x 2 colors
 
@@ -92,7 +92,13 @@ public class ChessBoardForm : Form
         board[0, 4] = new King(PieceColor.Black, pieceImages[(int)PieceType.King, (int)PieceColor.Black]);
         board[7, 4] = new King(PieceColor.White, pieceImages[(int)PieceType.King, (int)PieceColor.White]);
 
-        this.Size = new Size(boardSize * squareSize, boardSize * squareSize);
+        int formWidth = boardSize * squareSize;
+        int formHeight = boardSize * squareSize;
+
+        // Set the size of the form
+        this.ClientSize = new Size(formWidth, formHeight);
+
+        // Register the DrawChessboard method to handle painting events
         this.Paint += new PaintEventHandler(DrawChessboard);
     }
 
@@ -113,10 +119,7 @@ public class ChessBoardForm : Form
                 g.FillRectangle(squareBrush, x, y, squareSize, squareSize);
 
                 // Draw piece if exists
-                if (board[row, col] != null)
-                {
-                    board[row, col].Draw(g, x, y, squareSize);
-                }
+                board[row, col]?.Draw(g, x, y, squareSize);
             }
         }
     }
@@ -194,18 +197,7 @@ public class ChessBoardForm : Form
     }
 
 
-
-    private void InitializeComponent()
-    {
-        this.SuspendLayout();
-        // 
-        // ChessBoardForm
-        // 
-        this.ClientSize = new System.Drawing.Size(716, 359);
-        this.Name = "ChessBoardForm";
-        this.ResumeLayout(false);
-
-    }
+    
 }
 
 // Define Piece, Pawn, Rook, Knight, Bishop, Queen, and King classes
