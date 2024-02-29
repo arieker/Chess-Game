@@ -81,7 +81,7 @@ public class ChessBoardForm : Form
             for (int col = 0; col < boardSize; col++)
             {
                 bool isLightSquare = (row + col) % 2 == 0;
-                Brush squareBrush = (isLightSquare) ? Brushes.Cornsilk : Brushes.Green;
+                Brush squareBrush = (isLightSquare) ? Brushes.WhiteSmoke : Brushes.CornflowerBlue;
 
                 int x = col * squareSize;
                 int y = row * squareSize;
