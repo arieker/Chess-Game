@@ -94,10 +94,5 @@ namespace ChessUI
                 okButton.Enabled = false;
             }
         }
-
-        private void RegisterForm_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

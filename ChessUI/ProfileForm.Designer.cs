@@ -146,6 +146,7 @@
             this.changeNicknameButton.TabIndex = 9;
             this.changeNicknameButton.Text = "Change Nickname";
             this.changeNicknameButton.UseVisualStyleBackColor = true;
+            this.changeNicknameButton.Click += new System.EventHandler(this.changeNicknameButton_Click);
             // 
             // ProfileForm
             // 

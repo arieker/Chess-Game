@@ -31,5 +31,10 @@ namespace ChessUI
             dataGridView1.Rows[0].Cells[2].Value = user.getDraws();
 
         }
+
+        private void changeNicknameButton_Click(object sender, EventArgs e)
+        {
+            // open a new form that literally just has a textbox to change nickname or just somehow do it from inside the form? This event can be removed I'm just spitballing here.
+        }
     }
 }
