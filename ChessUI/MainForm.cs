@@ -87,7 +87,7 @@ namespace ChessUI
 
         private void editOrViewProfileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ProfileForm profile_form = new ProfileForm();
+            ProfileForm profile_form = new ProfileForm(Program.currentUser);
 
             profile_form.ShowDialog();
         }

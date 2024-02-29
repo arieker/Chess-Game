@@ -36,6 +36,8 @@
             this.okButton = new System.Windows.Forms.Button();
             this.confirmPasswordLabel = new System.Windows.Forms.Label();
             this.confirmPasswordTextBox = new System.Windows.Forms.TextBox();
+            this.nicknameLabel = new System.Windows.Forms.Label();
+            this.nicknameTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // usernameTextBox
@@ -57,9 +59,9 @@
             // 
             // passwordTextBox
             // 
-            this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Location = new System.Drawing.Point(15, 65);
             this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Size = new System.Drawing.Size(179, 20);
             this.passwordTextBox.TabIndex = 2;
             this.passwordTextBox.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
@@ -75,7 +77,7 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(200, 177);
+            this.cancelButton.Location = new System.Drawing.Point(200, 196);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 5;
@@ -85,7 +87,7 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(119, 177);
+            this.okButton.Location = new System.Drawing.Point(119, 196);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 5;
@@ -104,19 +106,37 @@
             // 
             // confirmPasswordTextBox
             // 
-            this.confirmPasswordTextBox.PasswordChar = '*';
             this.confirmPasswordTextBox.Location = new System.Drawing.Point(15, 105);
             this.confirmPasswordTextBox.Name = "confirmPasswordTextBox";
+            this.confirmPasswordTextBox.PasswordChar = '*';
             this.confirmPasswordTextBox.Size = new System.Drawing.Size(179, 20);
             this.confirmPasswordTextBox.TabIndex = 4;
             this.confirmPasswordTextBox.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
+            // 
+            // nicknameLabel
+            // 
+            this.nicknameLabel.AutoSize = true;
+            this.nicknameLabel.Location = new System.Drawing.Point(12, 132);
+            this.nicknameLabel.Name = "nicknameLabel";
+            this.nicknameLabel.Size = new System.Drawing.Size(106, 13);
+            this.nicknameLabel.TabIndex = 8;
+            this.nicknameLabel.Text = "Nickname (Optional):";
+            // 
+            // nicknameTextBox
+            // 
+            this.nicknameTextBox.Location = new System.Drawing.Point(15, 148);
+            this.nicknameTextBox.Name = "nicknameTextBox";
+            this.nicknameTextBox.Size = new System.Drawing.Size(179, 20);
+            this.nicknameTextBox.TabIndex = 9;
             // 
             // RegisterForm
             // 
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(295, 212);
+            this.ClientSize = new System.Drawing.Size(295, 231);
+            this.Controls.Add(this.nicknameTextBox);
+            this.Controls.Add(this.nicknameLabel);
             this.Controls.Add(this.confirmPasswordLabel);
             this.Controls.Add(this.confirmPasswordTextBox);
             this.Controls.Add(this.okButton);
@@ -127,7 +147,6 @@
             this.Controls.Add(this.usernameTextBox);
             this.Name = "RegisterForm";
             this.Text = "Register";
-            this.Load += new System.EventHandler(this.RegisterForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -143,5 +162,7 @@
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Label confirmPasswordLabel;
         private System.Windows.Forms.TextBox confirmPasswordTextBox;
+        private System.Windows.Forms.Label nicknameLabel;
+        private System.Windows.Forms.TextBox nicknameTextBox;
     }
 }

@@ -64,6 +64,7 @@
             // 
             // sendMatchRequestButton
             // 
+            this.sendMatchRequestButton.Enabled = false;
             this.sendMatchRequestButton.Location = new System.Drawing.Point(12, 256);
             this.sendMatchRequestButton.Name = "sendMatchRequestButton";
             this.sendMatchRequestButton.Size = new System.Drawing.Size(121, 23);

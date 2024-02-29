@@ -15,7 +15,6 @@ namespace ChessUI
 {
     public partial class FindMatchForm : Form
     {
-        // In future remove these names, it's for testing, or just keep them here and rewrite the entire list every update (it should update on open)
         List<String> onlineUsernames = new List<String>();
         public FindMatchForm()
         {
@@ -64,7 +63,8 @@ namespace ChessUI
 
         private void onlineUsersListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            // this is literally just to enable it once one of them is selected
+            sendMatchRequestButton.Enabled = true;
         }
     }
 }

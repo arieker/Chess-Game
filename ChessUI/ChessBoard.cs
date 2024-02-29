@@ -19,19 +19,43 @@ public class ChessBoardForm : Form
 
     private void LoadPieceImages()
     {
+        // Relative directory path where the images are located
+        string directoryPath = @"../../Assets";
+
         // Load images for each piece and color
         for (PieceColor color = PieceColor.White; color <= PieceColor.Black; color++)
         {
             for (PieceType type = PieceType.Pawn; type <= PieceType.King; type++)
             {
-                string filePath = "Set this to the assets folder that's inside ChessUI project folder, I tried doing it didn't work for me i have no idea why";
+                // Construct the file name based on piece type and color
+                string fileName = $"{type.ToString().ToLower()}_{color.ToString().ToLower()}.png";
 
-                pieceImages[(int)type, (int)color] = Image.FromFile(filePath); // Please fix, read above string!
+                try
+                {
+                    // Combine the directory path and file name to form the full file path
+                    string filePath = Path.Combine(directoryPath, fileName);
 
+                    // Print out the full file path
+                    Console.WriteLine($"Attempting to load image: {filePath}");
 
+                    // Load the image from the file path
+                    pieceImages[(int)type, (int)color] = Image.FromFile(filePath);
+                }
+                catch (FileNotFoundException)
+                {
+                    // Handle file not found exception
+                    MessageBox.Show($"Image file '{fileName}' not found in directory: {directoryPath}");
+                }
+                catch (Exception ex)
+                {
+                    // Handle other exceptions
+                    MessageBox.Show($"An error occurred while loading image '{fileName}': {ex.Message}");
+                }
             }
         }
     }
+
+
 
     private void InitializeBoard()
     {
@@ -97,25 +121,89 @@ public class ChessBoardForm : Form
         }
     }
 
+    private Piece selectedPiece = null;
+    private Point selectedSquare = Point.Empty;
+
     private void ChessBoardForm_MouseClick(object sender, MouseEventArgs e)
     {
         int row = e.Y / squareSize;
         int col = e.X / squareSize;
 
-        // For demonstration, let's place a piece (e.g., a pawn) at the clicked position
-        board[row, col] = new Pawn(PieceColor.White, pieceImages[(int)PieceType.Pawn, (int)PieceColor.White]); // Change the piece type/color as needed
-        this.Invalidate(); // Redraw the chessboard
+        if (selectedPiece == null)
+        {
+            // If no piece is selected, check if there's a piece at the clicked position
+            if (board[row, col] != null)
+            {
+                // Select the piece at the clicked position
+                selectedPiece = board[row, col];
+                selectedSquare = new Point(col, row);
+            }
+        }
+        else
+        {
+            // If a piece is already selected, move the selected piece to the clicked position
+            if (IsValidMove(selectedSquare, new Point(col, row)))
+            {
+                // Move the selected piece to the destination square
+                board[row, col] = selectedPiece;
+                board[selectedSquare.Y, selectedSquare.X] = null;
+
+                // Reset selected piece and square
+                selectedPiece = null;
+                selectedSquare = Point.Empty;
+
+                // Redraw the chessboard
+                this.Invalidate();
+            }
+            else
+            {
+                // Invalid move, deselect the piece
+                selectedPiece = null;
+                selectedSquare = Point.Empty;
+            }
+        }
     }
+
+    private bool IsValidMove(Point source, Point destination)
+    {
+        // Check if the move is within the bounds of the board
+        if (destination.X < 0 || destination.X >= boardSize || destination.Y < 0 || destination.Y >= boardSize)
+        {
+            return false; // Destination square is outside the board
+        }
+
+        // Get the piece at the source square
+        Piece sourcePiece = board[source.Y, source.X];
+
+        // Checks there's a piece at the source square
+        if (sourcePiece == null)
+        {
+            return false; // no piece to move
+        }
+
+        // Checks destination square is empty or contains an opponent's piece
+        Piece destinationPiece = board[destination.Y, destination.X];
+        if (destinationPiece == null || destinationPiece.Color != sourcePiece.Color)
+        {
+            // Move valid if  destination square is empty or contains an opponent's piece
+            return true;
+        }
+
+        // Destination square contains a piece of the same color
+        return false;
+    }
+
+
 
     private void InitializeComponent()
     {
-            this.SuspendLayout();
-            // 
-            // ChessBoardForm
-            // 
-            this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Name = "ChessBoardForm";
-            this.ResumeLayout(false);
+        this.SuspendLayout();
+        // 
+        // ChessBoardForm
+        // 
+        this.ClientSize = new System.Drawing.Size(716, 359);
+        this.Name = "ChessBoardForm";
+        this.ResumeLayout(false);
 
     }
 }

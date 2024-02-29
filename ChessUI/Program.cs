@@ -64,7 +64,14 @@ namespace ChessUI
                 using (con = new MySqlConnection())
                 {
                     con.ConnectionString = ConfigurationManager.ConnectionStrings["users"].ConnectionString;
-                    con.Open();
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch
+                    {
+                        return;
+                    }
                     MySqlCommand command = new MySqlCommand("UPDATE `login`.`users` SET `status` = 'Offline' WHERE(`username` = '" + this.username + "');", con);
                     command.ExecuteReader();    
 

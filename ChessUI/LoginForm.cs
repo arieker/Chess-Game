@@ -48,7 +48,15 @@ namespace ChessUI
                     // In a dream world, you can tell the user that the username is unique as they type it like a real website. If this is possible that'd be cool :) but this form is your baby, I won't touch it too much
                     // p.s. make sure u limit the length of usernames to something respectable and don't let them use characters that might cause issues like 漢字 even tho they prob wont cause issues
                     con.ConnectionString = ConfigurationManager.ConnectionStrings["users"].ConnectionString;
-                    con.Open(); // todo need some kind of try catch here because if the connection fails like if its blocked it just errors this line
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Login connection failed. Please try again.");
+                        return false;
+                    }
                     MySqlDataAdapter da = new MySqlDataAdapter(new MySqlCommand("SELECT COUNT(*) FROM users WHERE username='" + username + "' AND password='" + password + "'", con));
                     DataTable loginTable = new DataTable();
                     da.Fill(loginTable);
