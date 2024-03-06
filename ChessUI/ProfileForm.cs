@@ -20,8 +20,9 @@ namespace ChessUI
             Debug.Write(""+ user.getDraws());
             InitializeComponent();
 
-            usernameTextBox.SelectedText = user.getUsername();
-            openingDateTextBox.SelectedText = user.getDate();
+            nicknameTextLabel.Text = user.getNickname();
+            usernameTextLabel.Text = user.getUsername();
+            openingDateTextLabel.Text = user.getDate();
             if (Program.currentUser == user)
             {
                 changeNicknameButton.Enabled = true;

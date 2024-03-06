@@ -29,16 +29,16 @@
         private void InitializeComponent()
         {
             this.usernameLabel = new System.Windows.Forms.Label();
-            this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.openingDateLabel = new System.Windows.Forms.Label();
-            this.openingDateTextBox = new System.Windows.Forms.TextBox();
             this.Draws = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Losses = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Wins = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.nicknameTextBox = new System.Windows.Forms.TextBox();
             this.nicknameLabel = new System.Windows.Forms.Label();
             this.changeNicknameButton = new System.Windows.Forms.Button();
+            this.usernameTextLabel = new System.Windows.Forms.Label();
+            this.openingDateTextLabel = new System.Windows.Forms.Label();
+            this.nicknameTextLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,15 +51,6 @@
             this.usernameLabel.TabIndex = 0;
             this.usernameLabel.Text = "Username:";
             // 
-            // usernameTextBox
-            // 
-            this.usernameTextBox.Location = new System.Drawing.Point(12, 64);
-            this.usernameTextBox.Name = "usernameTextBox";
-            this.usernameTextBox.ReadOnly = true;
-            this.usernameTextBox.Size = new System.Drawing.Size(180, 20);
-            this.usernameTextBox.TabIndex = 2;
-            this.usernameTextBox.TabStop = false;
-            // 
             // openingDateLabel
             // 
             this.openingDateLabel.AutoSize = true;
@@ -68,15 +59,6 @@
             this.openingDateLabel.Size = new System.Drawing.Size(119, 13);
             this.openingDateLabel.TabIndex = 5;
             this.openingDateLabel.Text = "Account Opening Date:";
-            // 
-            // openingDateTextBox
-            // 
-            this.openingDateTextBox.Location = new System.Drawing.Point(12, 103);
-            this.openingDateTextBox.Name = "openingDateTextBox";
-            this.openingDateTextBox.ReadOnly = true;
-            this.openingDateTextBox.Size = new System.Drawing.Size(180, 20);
-            this.openingDateTextBox.TabIndex = 4;
-            this.openingDateTextBox.TabStop = false;
             // 
             // Draws
             // 
@@ -119,15 +101,6 @@
             this.dataGridView1.TabIndex = 6;
             this.dataGridView1.TabStop = false;
             // 
-            // nicknameTextBox
-            // 
-            this.nicknameTextBox.Location = new System.Drawing.Point(12, 25);
-            this.nicknameTextBox.Name = "nicknameTextBox";
-            this.nicknameTextBox.ReadOnly = true;
-            this.nicknameTextBox.Size = new System.Drawing.Size(180, 20);
-            this.nicknameTextBox.TabIndex = 8;
-            this.nicknameTextBox.TabStop = false;
-            // 
             // nicknameLabel
             // 
             this.nicknameLabel.AutoSize = true;
@@ -148,18 +121,45 @@
             this.changeNicknameButton.UseVisualStyleBackColor = true;
             this.changeNicknameButton.Click += new System.EventHandler(this.changeNicknameButton_Click);
             // 
+            // usernameTextLabel
+            // 
+            this.usernameTextLabel.AutoSize = true;
+            this.usernameTextLabel.Location = new System.Drawing.Point(17, 68);
+            this.usernameTextLabel.Name = "usernameTextLabel";
+            this.usernameTextLabel.Size = new System.Drawing.Size(100, 13);
+            this.usernameTextLabel.TabIndex = 10;
+            this.usernameTextLabel.Text = "usernameTextLabel";
+            // 
+            // openingDateTextLabel
+            // 
+            this.openingDateTextLabel.AutoSize = true;
+            this.openingDateTextLabel.Location = new System.Drawing.Point(17, 107);
+            this.openingDateTextLabel.Name = "openingDateTextLabel";
+            this.openingDateTextLabel.Size = new System.Drawing.Size(115, 13);
+            this.openingDateTextLabel.TabIndex = 11;
+            this.openingDateTextLabel.Text = "openingDateTextLabel";
+            // 
+            // nicknameTextLabel
+            // 
+            this.nicknameTextLabel.AutoSize = true;
+            this.nicknameTextLabel.Location = new System.Drawing.Point(17, 29);
+            this.nicknameTextLabel.Name = "nicknameTextLabel";
+            this.nicknameTextLabel.Size = new System.Drawing.Size(100, 13);
+            this.nicknameTextLabel.TabIndex = 12;
+            this.nicknameTextLabel.Text = "nicknameTextLabel";
+            // 
             // ProfileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 206);
+            this.Controls.Add(this.nicknameTextLabel);
+            this.Controls.Add(this.openingDateTextLabel);
+            this.Controls.Add(this.usernameTextLabel);
             this.Controls.Add(this.changeNicknameButton);
-            this.Controls.Add(this.nicknameTextBox);
             this.Controls.Add(this.nicknameLabel);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.openingDateLabel);
-            this.Controls.Add(this.openingDateTextBox);
-            this.Controls.Add(this.usernameTextBox);
             this.Controls.Add(this.usernameLabel);
             this.Name = "ProfileForm";
             this.Text = "Account Information";
@@ -171,15 +171,15 @@
         #endregion
 
         private System.Windows.Forms.Label usernameLabel;
-        private System.Windows.Forms.TextBox usernameTextBox;
         private System.Windows.Forms.Label openingDateLabel;
-        private System.Windows.Forms.TextBox openingDateTextBox;
         private System.Windows.Forms.DataGridViewTextBoxColumn Draws;
         private System.Windows.Forms.DataGridViewTextBoxColumn Losses;
         private System.Windows.Forms.DataGridViewTextBoxColumn Wins;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.TextBox nicknameTextBox;
         private System.Windows.Forms.Label nicknameLabel;
         private System.Windows.Forms.Button changeNicknameButton;
+        private System.Windows.Forms.Label usernameTextLabel;
+        private System.Windows.Forms.Label openingDateTextLabel;
+        private System.Windows.Forms.Label nicknameTextLabel;
     }
 }
