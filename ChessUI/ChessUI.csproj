@@ -98,6 +98,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeNicknameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangeNicknameForm.Designer.cs">
+      <DependentUpon>ChangeNicknameForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ChessBoard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,6 +140,9 @@
     <Compile Include="RegisterForm.Designer.cs">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ChangeNicknameForm.resx">
+      <DependentUpon>ChangeNicknameForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ChessBoard.resx">
       <DependentUpon>ChessBoard.cs</DependentUpon>
     </EmbeddedResource>

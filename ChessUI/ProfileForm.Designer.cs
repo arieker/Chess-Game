@@ -39,6 +39,7 @@
             this.usernameTextLabel = new System.Windows.Forms.Label();
             this.openingDateTextLabel = new System.Windows.Forms.Label();
             this.nicknameTextLabel = new System.Windows.Forms.Label();
+            this.sendMatchRequestButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -148,11 +149,24 @@
             this.nicknameTextLabel.TabIndex = 12;
             this.nicknameTextLabel.Text = "nicknameTextLabel";
             // 
+            // sendMatchRequestButton
+            // 
+            this.sendMatchRequestButton.Enabled = false;
+            this.sendMatchRequestButton.Location = new System.Drawing.Point(208, 82);
+            this.sendMatchRequestButton.Name = "sendMatchRequestButton";
+            this.sendMatchRequestButton.Size = new System.Drawing.Size(149, 23);
+            this.sendMatchRequestButton.TabIndex = 13;
+            this.sendMatchRequestButton.Text = "Send Match Request";
+            this.sendMatchRequestButton.UseVisualStyleBackColor = true;
+            this.sendMatchRequestButton.Visible = false;
+            this.sendMatchRequestButton.Click += new System.EventHandler(this.sendMatchRequestButton_Click);
+            // 
             // ProfileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 206);
+            this.Controls.Add(this.sendMatchRequestButton);
             this.Controls.Add(this.nicknameTextLabel);
             this.Controls.Add(this.openingDateTextLabel);
             this.Controls.Add(this.usernameTextLabel);
@@ -181,5 +195,6 @@
         private System.Windows.Forms.Label usernameTextLabel;
         private System.Windows.Forms.Label openingDateTextLabel;
         private System.Windows.Forms.Label nicknameTextLabel;
+        private System.Windows.Forms.Button sendMatchRequestButton;
     }
 }

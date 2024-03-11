@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -56,15 +57,14 @@ namespace ChessUI
 
         private void sendMatchRequestButton_Click(object sender, EventArgs e)
         {
-            // Code to send match request to person who was selected inside of the listbox
-            // Make sure to check that they are online
-            // This might get buried, but make sure being "online" doesn't just mean that they are online, but not inside of a match. We can simplify things by making being in a match = offline
+            // open a view profile form with the information of the person that is selected in the listbox with this line or some other method
+            Debug.WriteLine(onlineUsersListBox.SelectedItem.ToString());
         }
 
         private void onlineUsersListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             // this is literally just to enable it once one of them is selected
-            sendMatchRequestButton.Enabled = true;
+            viewProfileButton.Enabled = true;
         }
     }
 }

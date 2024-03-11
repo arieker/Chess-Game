@@ -27,6 +27,10 @@ namespace ChessUI
             {
                 changeNicknameButton.Enabled = true;
             }
+            else
+            {
+                sendMatchRequestButton.Enabled = true;
+            }
             dataGridView1.Rows[0].Cells[0].Value = user.getWins();
             dataGridView1.Rows[0].Cells[1].Value = user.getLosses();
             dataGridView1.Rows[0].Cells[2].Value = user.getDraws();
@@ -35,7 +39,14 @@ namespace ChessUI
 
         private void changeNicknameButton_Click(object sender, EventArgs e)
         {
-            // open a new form that literally just has a textbox to change nickname or just somehow do it from inside the form? This event can be removed I'm just spitballing here.
+            ChangeNicknameForm change_nickname_form = new ChangeNicknameForm();
+
+            change_nickname_form.ShowDialog();
+        }
+
+        private void sendMatchRequestButton_Click(object sender, EventArgs e)
+        {
+            // send match request to someone
         }
     }
 }

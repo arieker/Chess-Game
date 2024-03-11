@@ -31,7 +31,7 @@
             this.onlineUsersListBox = new System.Windows.Forms.ListBox();
             this.refreshButton = new System.Windows.Forms.Button();
             this.onlineUsersListBoxLabel = new System.Windows.Forms.Label();
-            this.sendMatchRequestButton = new System.Windows.Forms.Button();
+            this.viewProfileButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // onlineUsersListBox
@@ -62,23 +62,23 @@
             this.onlineUsersListBoxLabel.TabIndex = 2;
             this.onlineUsersListBoxLabel.Text = "Online Users:";
             // 
-            // sendMatchRequestButton
+            // viewProfileButton
             // 
-            this.sendMatchRequestButton.Enabled = false;
-            this.sendMatchRequestButton.Location = new System.Drawing.Point(12, 256);
-            this.sendMatchRequestButton.Name = "sendMatchRequestButton";
-            this.sendMatchRequestButton.Size = new System.Drawing.Size(121, 23);
-            this.sendMatchRequestButton.TabIndex = 3;
-            this.sendMatchRequestButton.Text = "Send Match Request";
-            this.sendMatchRequestButton.UseVisualStyleBackColor = true;
-            this.sendMatchRequestButton.Click += new System.EventHandler(this.sendMatchRequestButton_Click);
+            this.viewProfileButton.Enabled = false;
+            this.viewProfileButton.Location = new System.Drawing.Point(12, 256);
+            this.viewProfileButton.Name = "viewProfileButton";
+            this.viewProfileButton.Size = new System.Drawing.Size(84, 23);
+            this.viewProfileButton.TabIndex = 3;
+            this.viewProfileButton.Text = "View Profile";
+            this.viewProfileButton.UseVisualStyleBackColor = true;
+            this.viewProfileButton.Click += new System.EventHandler(this.sendMatchRequestButton_Click);
             // 
             // FindMatchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(291, 286);
-            this.Controls.Add(this.sendMatchRequestButton);
+            this.Controls.Add(this.viewProfileButton);
             this.Controls.Add(this.onlineUsersListBoxLabel);
             this.Controls.Add(this.refreshButton);
             this.Controls.Add(this.onlineUsersListBox);
@@ -94,6 +94,6 @@
         private System.Windows.Forms.ListBox onlineUsersListBox;
         private System.Windows.Forms.Button refreshButton;
         private System.Windows.Forms.Label onlineUsersListBoxLabel;
-        private System.Windows.Forms.Button sendMatchRequestButton;
+        private System.Windows.Forms.Button viewProfileButton;
     }
 }
