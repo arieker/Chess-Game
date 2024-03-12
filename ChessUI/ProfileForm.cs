@@ -30,6 +30,8 @@ namespace ChessUI
             else
             {
                 sendMatchRequestButton.Enabled = true;
+                sendMatchRequestButton.Visible = true;
+                changeNicknameButton.Visible = false;
             }
             dataGridView1.Rows[0].Cells[0].Value = user.getWins();
             dataGridView1.Rows[0].Cells[1].Value = user.getLosses();
@@ -42,6 +44,7 @@ namespace ChessUI
             ChangeNicknameForm change_nickname_form = new ChangeNicknameForm();
 
             change_nickname_form.ShowDialog();
+            nicknameTextLabel.Text = Program.currentUser.getNickname();
         }
 
         private void sendMatchRequestButton_Click(object sender, EventArgs e)

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ChessUI
 {
@@ -51,14 +52,67 @@ namespace ChessUI
         private void refreshButton_Click(object sender, EventArgs e)
         {
             // Set onlineUsernames to the updated list of online users
+            viewProfileButton.Enabled = false;
             onlineUsernames.Clear();
             UpdateOnlineUserList(onlineUsernames);
         }
 
         private void sendMatchRequestButton_Click(object sender, EventArgs e)
         {
-            // open a view profile form with the information of the person that is selected in the listbox with this line or some other method
-            Debug.WriteLine(onlineUsersListBox.SelectedItem.ToString());
+            String username;
+            if (onlineUsersListBox.SelectedItem != null)
+            {
+                username = onlineUsersListBox.SelectedItem.ToString();
+            }
+            else
+            {
+                return;
+            }
+            try
+            {
+
+                MySqlConnection con;
+
+                using (con = new MySqlConnection())
+                {
+                    con.ConnectionString = ConfigurationManager.ConnectionStrings["users"].ConnectionString;
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Connection failed. Please try again.");
+                        return;
+                    }
+                    MySqlDataAdapter da = new MySqlDataAdapter(new MySqlCommand("SELECT COUNT(*) FROM users WHERE username='" + username + "'", con));
+                    DataTable loginTable = new DataTable();
+                    da.Fill(loginTable);
+
+                    if (loginTable.Rows[0][0].ToString() == "1")
+                    {
+                        MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + username + "'", con);
+                        MySqlDataReader dr = command.ExecuteReader();
+                        if (dr.Read())
+                        {
+                            User viewUser = new User(dr[0].ToString(), dr[2].ToString(), Int32.Parse(dr[3].ToString()), Int32.Parse(dr[4].ToString()), Int32.Parse(dr[5].ToString()), dr[6].ToString(), dr[7].ToString());
+                            ProfileForm profile_form = new ProfileForm(viewUser);
+
+                            profile_form.ShowDialog();
+                        }
+                        dr.Close();
+                        MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `status` = 'Online' WHERE (`username` = '" + username + "');", con);
+                        MySqlDataReader dr2 = onlinecommand.ExecuteReader();
+                        con.Close();
+                    }
+                    con.Close();
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
         }
 
         private void onlineUsersListBox_SelectedIndexChanged(object sender, EventArgs e)
