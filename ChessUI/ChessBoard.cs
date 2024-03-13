@@ -12,6 +12,7 @@ public class ChessBoardForm : Form
 
     public ChessBoardForm()
     {
+        InitializeComponent();
         LoadPieceImages(); // Load piece images
         InitializeBoard();
         this.MouseClick += ChessBoardForm_MouseClick;
@@ -151,12 +152,13 @@ public class ChessBoardForm : Form
                 board[row, col] = selectedPiece;
                 board[selectedSquare.Y, selectedSquare.X] = null;
 
+                // Invalidate the starting cell and the destination cell
+                InvalidateCell(selectedSquare);
+                InvalidateCell(new Point(col, row));
+
                 // Reset selected piece and square
                 selectedPiece = null;
                 selectedSquare = Point.Empty;
-
-                // Redraw the chessboard
-                this.Invalidate();
             }
             else
             {
@@ -166,6 +168,14 @@ public class ChessBoardForm : Form
             }
         }
     }
+
+    private void InvalidateCell(Point cell)
+    {
+        Rectangle cellRect = new Rectangle(cell.X * squareSize, cell.Y * squareSize, squareSize, squareSize);
+        Invalidate(cellRect);
+    }
+
+
 
     private bool IsValidMove(Point source, Point destination)
     {
@@ -196,8 +206,22 @@ public class ChessBoardForm : Form
         return false;
     }
 
+    private void InitializeComponent()
+    {
+            this.SuspendLayout();
+            // 
+            // ChessBoardForm
+            // 
+            this.AccessibleDescription = "";
+            this.AccessibleName = "";
+            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.ClientSize = new System.Drawing.Size(725, 598);
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Name = "ChessBoardForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.ResumeLayout(false);
 
-    
+    }
 }
 
 // Define Piece, Pawn, Rook, Knight, Bishop, Queen, and King classes
