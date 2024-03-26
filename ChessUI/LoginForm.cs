@@ -67,14 +67,17 @@ namespace ChessUI
                     // checks if username and password holds a valid entry
                     if (loginTable.Rows[0][0].ToString() == "1")
                     {
-                        MessageBox.Show("Logged in Successfully");
-                        Console.Out.WriteLine("Logged in Successfully");
 
                         // set currentuser static variable
                         MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + username + "'", con);
                         MySqlDataReader dr = command.ExecuteReader();
                         if (dr.Read())
                         {
+                            if (dr[7].ToString() == "Online")
+                            {
+                                MessageBox.Show("This user is already logged in.");
+                                return false;
+                            }
                             User currentUser = new User(dr[0].ToString(), dr[2].ToString(), Int32.Parse(dr[3].ToString()), Int32.Parse(dr[4].ToString()), Int32.Parse(dr[5].ToString()), dr[6].ToString(), dr[7].ToString());
                             Program.currentUser = currentUser;
                         }
@@ -82,6 +85,8 @@ namespace ChessUI
                         MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `status` = 'Online' WHERE (`username` = '" + username + "');", con);
                         MySqlDataReader dr2 = onlinecommand.ExecuteReader();
                         Program.currentUser.setStatus("Online");
+                        MessageBox.Show("Logged in Successfully");
+                        Console.Out.WriteLine("Logged in Successfully");
                         con.Close();
 
                         //establish connection to server

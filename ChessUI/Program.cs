@@ -157,7 +157,10 @@ namespace ChessUI
             Application.Run(new MainForm());
 
             awaitThread.Abort();
-            currentSocket.Close();
+            if (currentSocket != null)
+            {
+                currentSocket.Close();
+            }
         }
 
         public static void Await()
