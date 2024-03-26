@@ -36,6 +36,20 @@ namespace ChessUI
                 confirmPasswordTextBox.Clear();
                 return;
             }
+            if (username.Contains(' '))
+            {
+                MessageBox.Show("Username can not have spaces in it.");
+                passwordTextBox.Clear();
+                confirmPasswordTextBox.Clear();
+                return;
+            }
+            if (username.Length > 11 && username.Substring(0,11) == ("sendRequest"))
+            {
+                MessageBox.Show("Invalid username or password");
+                passwordTextBox.Clear();
+                confirmPasswordTextBox.Clear();
+                return;
+            }
             try
             {
                 MySqlConnection con;

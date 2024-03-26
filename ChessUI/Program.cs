@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mysqlx.Crud;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Net.Sockets;
+using System.Net;
+using System.Threading;
+
 
 namespace ChessUI
 {
@@ -139,15 +143,40 @@ namespace ChessUI
     internal static class Program
     {
         public static User currentUser = new User("Guest", "Guest", 0, 0, 0, DateTime.Today.ToString(), "Online");
+        public static Socket currentSocket = null;
+        public static Thread awaitThread = new Thread(new ThreadStart(() => Program.Await()));
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
+
+            awaitThread.Abort();
+            currentSocket.Close();
+        }
+
+        public static void Await()
+        {
+            while (true)
+            {
+                int size = 0;
+                byte[] serverMsg = new byte[1024];
+                try
+                {
+                    size = Program.currentSocket.Receive(serverMsg);
+                }
+                catch (SocketException e) 
+                {
+                    Console.WriteLine("Connection aborted");
+                    return;
+                }
+                MessageBox.Show(System.Text.Encoding.ASCII.GetString(serverMsg, 0, size) + "(request received by " + Program.currentUser.getUsername() + ")");
+            }
         }
     }
 }

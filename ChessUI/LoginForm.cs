@@ -6,6 +6,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net.Sockets;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,7 @@ using System.Windows.Forms;
 using MySql;
 using MySql.Data.MySqlClient;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Threading;
 
 namespace ChessUI
 {
@@ -80,6 +83,19 @@ namespace ChessUI
                         MySqlDataReader dr2 = onlinecommand.ExecuteReader();
                         Program.currentUser.setStatus("Online");
                         con.Close();
+
+                        //establish connection to server
+                        int port = 31415;
+                        string ip = "127.0.0.1";
+                        Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                        IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+                        ClientSocket.Connect(ep);
+                        string serveruser = Program.currentUser.getUsername();
+                        Program.currentSocket = ClientSocket;
+                        Program.currentSocket.Send(System.Text.Encoding.ASCII.GetBytes(serveruser), 0, serveruser.Length, SocketFlags.None);
+
+                        
+                        Program.awaitThread.Start();
                         return true;
                     }
                     else
