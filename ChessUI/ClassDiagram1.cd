@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="ChessUI.ChangeNicknameForm">
+    <Position X="38" Y="5.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACQAAAAAAACAAAACAAAAEAAAQAAQCAAAAAA=</HashCode>
+      <FileName>ChangeNicknameForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.FindMatchForm">
+    <Position X="32.75" Y="7.25" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABEACAAAAAAAASAAEACAAAAAMAAAAgAIAAAEAA=</HashCode>
+      <FileName>FindMatchForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.Square">
+    <Position X="4" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>GameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.BoardLogic">
+    <Position X="3" Y="7.75" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AgIAAAAAgBAAAACAAAIIAAAAAAAAACAEAAAIAAAgAAA=</HashCode>
+      <FileName>GameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.PieceLogic">
+    <Position X="8.5" Y="5" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAIAAAABAAUAAEAAQACAAAAgAAAAABgAAAAACA=</HashCode>
+      <FileName>GameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.PawnLogic">
+    <Position X="14.75" Y="10.25" Width="5" />
+    <InheritanceLine Type="ChessUI.PieceLogic" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13.5" Y="6.875" />
+        <Point X="13.988" Y="6.875" />
+        <Point X="13.988" Y="11" />
+        <Point X="14.75" Y="11" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.RookLogic">
+    <Position X="14.75" Y="5.75" Width="5" />
+    <InheritanceLine Type="ChessUI.PieceLogic" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="13.5" Y="6.875" />
+        <Point X="14.514" Y="6.875" />
+        <Point X="14.514" Y="6.853" />
+        <Point X="14.75" Y="6.853" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.KnightLogic">
+    <Position X="14.75" Y="7.25" Width="5" />
+    <InheritanceLine Type="ChessUI.PieceLogic" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="13.5" Y="6.875" />
+        <Point X="14.182" Y="6.875" />
+        <Point X="14.182" Y="7.963" />
+        <Point X="14.75" Y="7.963" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.BishopLogic">
+    <Position X="14.75" Y="8.75" Width="5" />
+    <InheritanceLine Type="ChessUI.PieceLogic" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="13.5" Y="6.875" />
+        <Point X="14.182" Y="6.875" />
+        <Point X="14.182" Y="9.65" />
+        <Point X="14.75" Y="9.65" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.QueenLogic">
+    <Position X="14.75" Y="4.25" Width="5" />
+    <InheritanceLine Type="ChessUI.PieceLogic" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="13.5" Y="6.875" />
+        <Point X="14.38" Y="6.875" />
+        <Point X="14.38" Y="4.963" />
+        <Point X="14.75" Y="4.963" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.KingLogic">
+    <Position X="14.75" Y="0.75" Width="5" />
+    <InheritanceLine Type="ChessUI.PieceLogic" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13.5" Y="6.875" />
+        <Point X="14.182" Y="6.875" />
+        <Point X="14.182" Y="2.375" />
+        <Point X="14.75" Y="2.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AgAAAAAIAAQACABAAAAAAAAAIAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>GameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.LoginForm">
+    <Position X="49.25" Y="5.75" Width="4" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAAACQAAAAAACCABAACAAAQEAAAAAAQAAgAAAA=</HashCode>
+      <FileName>LoginForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.MainForm">
+    <Position X="43" Y="6.5" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AQAAUAAAADAEQAgAAECADAACAAABAAACCAEAAAAAAIA=</HashCode>
+      <FileName>MainForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.ProfileForm">
+    <Position X="36.5" Y="0.5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAhAUCigAAAAAAiAAAACAAoACAAgAAAAAAgAAAA=</HashCode>
+      <FileName>ProfileForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.User">
+    <Position X="42" Y="1" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AARQAQEAAAAAEEAAIAAAAAMAAAABBUAAAKAQIAAAAQA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.Program">
+    <Position X="31" Y="14.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.RegisterForm">
+    <Position X="49.25" Y="0.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>BAAKAAAAACSAAAAAACCABABCAAAQEAAAQAAQAAgAAAA=</HashCode>
+      <FileName>RegisterForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.Properties.Resources">
+    <Position X="37" Y="14.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessUI.Properties.Settings">
+    <Position X="33.25" Y="14.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChessBoardForm">
+    <Position X="30.75" Y="2.75" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAgABIgAAABAAAACgAAAAIQAAAQAAAAA=</HashCode>
+      <FileName>ChessBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Piece">
+    <Position X="25.75" Y="7" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAABAAAAAAgAAAAAA=</HashCode>
+      <FileName>ChessBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pawn">
+    <Position X="20.75" Y="10.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ChessBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rook">
+    <Position X="20.75" Y="5.75" Width="3" />
+    <InheritanceLine Type="Piece" FixedFromPoint="true">
+      <Path>
+        <Point X="25.75" Y="7.812" />
+        <Point X="25.375" Y="7.812" />
+        <Point X="25.375" Y="6.463" />
+        <Point X="23.75" Y="6.463" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ChessBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Knight">
+    <Position X="20.75" Y="7.25" Width="3" />
+    <InheritanceLine Type="Piece" FixedFromPoint="true">
+      <Path>
+        <Point X="25.75" Y="7.812" />
+        <Point X="25.375" Y="7.812" />
+        <Point X="25.375" Y="8.244" />
+        <Point X="23.75" Y="8.244" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ChessBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bishop">
+    <Position X="20.75" Y="8.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ChessBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Queen">
+    <Position X="20.75" Y="4.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ChessBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="King">
+    <Position X="20.75" Y="1.5" Width="3" />
+    <InheritanceLine Type="Piece" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="27.25" Y="7" />
+        <Point X="27.25" Y="2.25" />
+        <Point X="23.75" Y="2.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ChessBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="PieceType">
+    <Position X="28.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAEggAAAAEAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ChessBoard.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PieceColor">
+    <Position X="27.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ChessBoard.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

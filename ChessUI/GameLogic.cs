@@ -1,5 +1,6 @@
 using Mysqlx.Session;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -52,8 +53,13 @@ namespace ChessUI
     {
         // 2d array of the spotsto represent the board for the logic
         private Square[,] LogicBoard = new Square[8, 8];
+        
         private KingLogic whiteKing = new KingLogic(PieceColor.White, 4, 0);
         private KingLogic blackKing = new KingLogic(PieceColor.Black, 4, 7);
+
+        private ArrayList whitePieces = new ArrayList();
+        private ArrayList blackPieces = new ArrayList();
+        
         private bool whitesTurn;
 
         //initalize the board and put the pieces in their correct starting spot
@@ -63,7 +69,9 @@ namespace ChessUI
             for (int x = 0; x < 8; x++)
             {
                 LogicBoard[x, 1] = new Square(new PawnLogic(PieceColor.White, x, 1));
+                whitePieces.Add(LogicBoard[x, 1].piece);
                 LogicBoard[x, 6] = new Square(new PawnLogic(PieceColor.Black, x, 6));
+                blackPieces.Add(LogicBoard[x, 6].piece);
             }
 
             // Initialize rooks
@@ -92,13 +100,17 @@ namespace ChessUI
             LogicBoard[4, 0] = new Square(whiteKing);
             LogicBoard[4, 7] = new Square(blackKing);
 
-            //Initalize the rest as empty
+            //Initalize the rest as empty and add pieces to arraylist
             for (int x = 0; x < 8; x++)
             {
                 LogicBoard[x, 2] = new Square(null);
                 LogicBoard[x, 3] = new Square(null);
                 LogicBoard[x, 4] = new Square(null);
                 LogicBoard[x, 5] = new Square(null);
+                
+                whitePieces.Add(LogicBoard[x, 0].piece);
+                blackPieces.Add(LogicBoard[x, 7].piece);
+
             }
 
             whitesTurn = true;
@@ -120,7 +132,7 @@ namespace ChessUI
             //can only move piece of the your color
             if (movedPiece.getIsWhite != whitesTurn) return false;
 
-            // if the move is a knig and puts it in check, it is invalid
+            // if the move is a king and puts it in check, it is invalid
             if(movedPiece is KingLogic)
             {
                 if (isUnderAttack(movedPiece, endX, endY)) return false;
@@ -129,21 +141,39 @@ namespace ChessUI
             // check if valid move
             if (movedPiece.isMoveValid(this, startX, startY, endX, endY)) 
             {
+                // can't move on a square that has 
+                if (!(LogicBoard[endX, endY].piece is null) && (LogicBoard[endX, endY].piece.getIsWhite == movedPiece.getIsWhite))
+                {
+                    return false;
+                }
+
                 // check if the move checks either king
-                checkIfCheck(endX, endY, movedPiece, blackKing); 
-                checkIfCheck(endX, endY, movedPiece, whiteKing);
+                PieceLogic blacksAttacker = checkIfCheck(endX, endY, movedPiece, blackKing);
+                PieceLogic whitesAttacker = checkIfCheck(endX, endY, movedPiece, whiteKing);
 
                 // cannot make a move that will end with your king being in check 
                 if(whiteKing.isInCheck && movedPiece.getIsWhite)
                 {
+                    whiteKing.removeCheck(whitesAttacker); // remove checks if they were placed
+                    blackKing.removeCheck(blacksAttacker);
                     return false;
                 }
                 if(blackKing.isInCheck && !movedPiece.getIsWhite)
                 {
+                    whiteKing.removeCheck(whitesAttacker);
+                    blackKing.removeCheck(blacksAttacker);
                     return false;
                 }
+                
 
                 //move pieces
+                //kill pieces it is moving on
+                if (!(LogicBoard[endX, endY].piece is null))
+                {
+                    KingLogic friendlyKing = whitesTurn ? whiteKing : blackKing;
+                    removeCheck(LogicBoard[endX, endY].piece, friendlyKing);
+                    LogicBoard[endX, endY].piece.isKilled = true;
+                }
                 LogicBoard[endX, endY].piece = movedPiece;
                 movedPiece.col = endX;
                 movedPiece.row = endY;
@@ -151,14 +181,14 @@ namespace ChessUI
                 LogicBoard[startX, startY].piece = null;
                 LogicBoard[startX, startY].isFilled = false;
 
-                //remove check and flip turn
-                whitesTurn = !whitesTurn;
-                KingLogic enemyKing = movedPiece.getIsWhite ? whiteKing : blackKing;
+                //remove check (if it is no longer checking enemy king) and flip turn
+                KingLogic enemyKing = whitesTurn ? blackKing : whiteKing;
                 removeCheck(movedPiece, enemyKing);
+                whitesTurn = !whitesTurn;
 
-                
+
                 // update first move var
-                if(movedPiece.FirstMove == false)
+                if (movedPiece.FirstMove == false)
                 {
                     movedPiece.FirstMove = true;
                 }
@@ -204,7 +234,17 @@ namespace ChessUI
         {
             // Check if they are trying to move the king
             if(! (LogicBoard[startX, startY].piece is KingLogic)) return false;
-            
+
+            // cant castle while under check
+            if (whiteKing.isInCheck && LogicBoard[startX, startY].piece.getIsWhite)
+            {
+                return false;
+            }
+            if (blackKing.isInCheck && !LogicBoard[startX, startY].piece.getIsWhite)
+            {
+                return false;
+            }
+
             // Check if it is his first move
             if (!(LogicBoard[startX, startY].piece.FirstMove)) return false;
 
@@ -225,22 +265,24 @@ namespace ChessUI
                     sign = -1;
                 }
 
-                // check that there is a rook there
-                if (! (LogicBoard[rookX, rookY].piece is RookLogic)) return false;
-                // check that he hasn't moved
+                // Check if it is rooks first move
                 if (!(LogicBoard[rookX, rookY].piece.FirstMove)) return false;
-
+                
                 // check if the move checks either king
-                checkIfCheck(endX, endY, LogicBoard[rookX, rookY].piece, blackKing);
-                checkIfCheck(endX, endY, LogicBoard[rookX, rookY].piece, whiteKing);
-                // cannot end with your king being in check 
+                PieceLogic blacksAttacker = checkIfCheck(endX, endY, LogicBoard[rookX, rookY].piece, blackKing);
+                PieceLogic whitesAttacker = checkIfCheck(endX, endY, LogicBoard[rookX, rookY].piece, whiteKing);
+
                 // cannot make a move that will end with your king being in check 
                 if (whiteKing.isInCheck && LogicBoard[rookX, rookY].piece.getIsWhite)
                 {
+                    whiteKing.removeCheck(whitesAttacker); // remove checks if they were placed
+                    blackKing.removeCheck(blacksAttacker);
                     return false;
                 }
                 if (blackKing.isInCheck && !LogicBoard[rookX, rookY].piece.getIsWhite)
                 {
+                    whiteKing.removeCheck(whitesAttacker);
+                    blackKing.removeCheck(blacksAttacker);
                     return false;
                 }
 
@@ -262,10 +304,32 @@ namespace ChessUI
                 LogicBoard[rookX, rookY].isFilled = false;
                 LogicBoard[endX + sign, endY].piece.FirstMove = true;
 
+                //Check that the king is not under attack now
+                if(isUnderAttack(LogicBoard[endX, endY].piece, endX, endY))
+                {
+                    // if he is revert changes
+                    LogicBoard[startX, startY].piece = LogicBoard[endX, endY].piece;
+                    LogicBoard[startX, startY].piece.col = startX;
+                    LogicBoard[startX, startY].piece.row = startY;
+                    LogicBoard[startX, startY].isFilled = true;
+                    LogicBoard[endX, endY].piece = null;
+                    LogicBoard[endX, endY].isFilled = false;
+                    LogicBoard[startX, startY].piece.FirstMove = false;
+                    /// then rook
+                    LogicBoard[rookX, rookY].piece = LogicBoard[endX + sign, endY].piece;
+                    LogicBoard[rookX, rookY].piece.col = rookX;
+                    LogicBoard[rookX, rookY].isFilled = true;
+                    LogicBoard[endX + sign, endY].piece = null;
+                    LogicBoard[endX + sign, endY].isFilled = false;
+                    LogicBoard[rookX, rookY].piece.FirstMove = false;
+
+                    return false;
+                }
+
                 //remove check and flip turn
-                whitesTurn = !whitesTurn;
-                KingLogic enemyKing = LogicBoard[rookX, rookY].piece.getIsWhite ? whiteKing : blackKing;
+                KingLogic enemyKing = whitesTurn ? blackKing : whiteKing;
                 removeCheck(LogicBoard[rookX, rookY].piece, enemyKing);
+                whitesTurn = !whitesTurn;
 
                 return true;
             }
@@ -273,7 +337,7 @@ namespace ChessUI
             return false;
         }
 
-        // check if the piece is listed as checking the king, remove if necessary
+        // check if the piece is listed as checking the king or it is now blocking, remove if necessary
         private void removeCheck(PieceLogic attacker, KingLogic king)
         {
             if (attacker == null) return;
@@ -284,6 +348,55 @@ namespace ChessUI
             if (king.beingCheckedBy(attacker) && !(attacker.isMoveValid(this, attacker.col, attacker.row, king.col, king.row)))
             {
                 king.removeCheck(attacker); // remove it as a checker of the king
+            }
+
+            //see if is now blocking a piece that was attacking the king
+            //Check the ray from the old location. See if it opened up an attack
+            int x = king.col; int y = king.row; int endX = attacker.col; int endY = attacker.row;
+            int deltaX = endX - x;
+            int deltaY = endY - y;
+            int xDir;
+            int yDir;
+
+            // in not a striaght line or an attackable diagnoal then not attackable
+            if (!(deltaX == 0 || deltaY == 0) && !(Math.Abs(deltaX) == Math.Abs(deltaX)))
+            {
+                return;
+            }
+            // if no movement (promotion and castling cases)
+            if (deltaX == 0 && deltaY == 0)
+            {
+                return;
+            }
+
+            //get direction it came from (the ray)
+            if (deltaX == 0) xDir = 0;
+            else xDir = deltaX > 0 ? 1 : -1;
+            if (deltaY == 0) yDir = 0;
+            else yDir = deltaY > 0 ? 1 : -1;
+
+            // take a step away from the piece that is potenitally blocking
+            endX += xDir;
+            endY += yDir;
+
+            // travel along the ray until you hit the end of board or reach a piece
+            while (endX < 8 && endY < 8 && endX > 0 && endY > 0)
+            {
+                //if you hit a square that is filled
+                if (this.isSquareFilled(endX, endY))
+                {
+                    //remove that piece if it can't move to king
+                    if(!LogicBoard[endX, endY].piece.isMoveValid(this, endX, endY, king.col, king.row))
+                    {
+                        // removeCheck will make sure it is different color and already checking
+                        king.removeCheck(LogicBoard[endX, endY].piece);
+                    }
+                    return;
+                }
+
+                // go further along the ray
+                endX += xDir;
+                endY += yDir;
             }
 
             return;
@@ -302,22 +415,28 @@ namespace ChessUI
          */
 
 
-        //check to see if the enemy king is now under check.
-        private bool checkIfCheck(int endX, int endY, PieceLogic attacker, KingLogic king)
+        //check to see if the king is now under check.
+        private PieceLogic checkIfCheck(int endX, int endY, PieceLogic attacker, KingLogic king)
         {
-            bool res = false;
+            /* return PieceLogic for checking if move is valid. 
+             * if a move places a check on a friendly king then the move is invalid and not executed 
+             * BUT... This method places the king under check of that found piece
+             * SO... it needs to be returned so it can be removed as a piece checking. 
+             */
+            PieceLogic res = null;
+            
             //make sure pieces are valid
-            if(attacker == null) return false;
-            if(king == null) return false;
+            if(attacker == null) return res; 
+            if(king == null) return res;
             //make sure the new location is a valid one
-            if(!(endX >= 0 && endX < 8 && endY >= 0 && endY < 8)) return false;
+            if(!(endX >= 0 && endX < 8 && endY >= 0 && endY < 8)) return res;
             
             // if pieces are oppsite color and attacker can attack king
-            if(!(king.getIsWhite == attacker.getIsWhite) && attacker.isMoveValid(this, endX, endY, king.col, king.row))
+            if((king.getIsWhite != attacker.getIsWhite) && attacker.isMoveValid(this, endX, endY, king.col, king.row))
             {
                 // add to the attack list and set 
                 king.nowChecking(attacker); // won't add if already in 
-                res = true;
+                res = attacker;
             }
 
             //Check the ray from the old location. See if it opened up an attack
@@ -363,19 +482,19 @@ namespace ChessUI
                     if (foundPiece is QueenLogic)
                     {
                         king.nowChecking(foundPiece);
-                        res = true;                    
+                        res = foundPiece;                    
                     }
                     // if the ray is a straight line, needs to be a rook
                     else if ((deltaX == 0 || deltaY == 0) && foundPiece is RookLogic)
                     {
                         king.nowChecking(foundPiece);
-                        res = true;                        
+                        res = foundPiece;                        
                     }
                     // else if the ray is a diag, needs to be a bishop
                     else if((Math.Abs(deltaX) == Math.Abs(deltaX)) && foundPiece is BishopLogic)
                     {
                         king.nowChecking(foundPiece);
-                        res = true;                        
+                        res = foundPiece;                        
                     }
                     return res;
                 }
@@ -388,12 +507,15 @@ namespace ChessUI
             return res;
         }
     
+        // returns if a piece moves there will it be under attack by any piece
         private bool isUnderAttack(PieceLogic piece, int startX, int startY)
         {
             // location vars
             int x = startX;
             int y = startY;
-            
+
+            if (x < 8 || y < 8 || x > 0 || y > 0) {  return true; }
+
             //pawns first
             /// pawns attack from... north for white, south for black
             int pawnY = piece.getIsWhite ? 1 : -1;
@@ -485,6 +607,29 @@ namespace ChessUI
             return false;
         }
     
+
+        public bool isGameOver()
+        {
+            return false;
+            /*int x = king.col;
+            int y = king.row;
+            
+            //1. try to move out of way.
+            /// all king moves
+            int[] xDir = { 0, 1, 1, 1, 0, -1, -1, -1 };
+            int[] yDir = { 1, 1, 0, -1, -1, -1, 0, 1 };
+            
+            ///for each ray
+            for (int i = 0; i < 8; i++)
+            {
+                // if that move makes it so it is not under attack then it is not checkmate
+                if(!isUnderAttack(king, x + xDir[i], y + yDir[i])) return false; //isUnderAttack method returns true if goes off board 
+            }
+
+            */
+
+
+        }
     }
 
     public abstract class PieceLogic
@@ -505,7 +650,8 @@ namespace ChessUI
 
 
         // if the piece is killed
-        private bool isKilled;
+        public bool isKilled {  get; set; }
+        
         // to determine if white or black
         private bool isWhite;
         // getter
@@ -883,9 +1029,9 @@ namespace ChessUI
             if (attacker == null) { return false; }
             //if both are same color then attacker can't attack king
             if (attacker.getIsWhite == this.getIsWhite) { return false; }
-            // if already in
+            // if not checking 
             if (!checkedBy.Contains(attacker)) { return false; }
-            // if you are about to removethe only piece that is checking the king
+            // if you are about to remove the only piece that is checking the king
             if (checkedBy.Count == 1) { inCheck = false; }
             //remove
             checkedBy.Remove(attacker);
