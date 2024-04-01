@@ -557,9 +557,35 @@ namespace ChessUI
         }
     
 
-        public bool isGameOver() //TODO********************************
+        public GameOverType isGameOver() 
         {
-            return false; 
+            // initialize result to the game not being over
+            GameOverType res = GameOverType.NotOver;
+
+            //get all the pieces and the king of whoevers turn it is
+            ArrayList pieces = whitesTurn ? whitePieces : blackPieces;
+            KingLogic king = whitesTurn ? whiteKing : blackKing;
+            
+            //for each piece get the number of legal moves they have. 
+            // if ANY of them have a legal move then the game is not over
+            int moves = 0;
+            foreach(PieceLogic piece  in pieces)
+            {
+                //skip dead pieces
+                if (piece.isKilled) continue;
+                
+                moves += piece.numLegalMoves(this);
+                if (moves > 0)// a legal move exist, game is not over
+                {
+                    return res;
+                }
+
+            }
+
+            // if there is no legal moves it is a checkmate or stalemate
+            // if king check then it's checkmate if not it's stalemate
+            res = king.isInCheck ? GameOverType.CheckMate : GameOverType.StaleMate;
+            return res; 
         }
     }
 
@@ -708,8 +734,8 @@ namespace ChessUI
             }
 
             // all the possiple moves
-            int[] deltaX = { 0, 0, 1, -1}
-            int[] deltaY = { 1, 2, 1, 1}
+            int[] deltaX = { 0, 0, 1, -1 };
+            int[] deltaY = { 1, 2, 1, 1 };
             int endX;
             int endY;
 
@@ -717,8 +743,8 @@ namespace ChessUI
             for (int i = 0; i < 4; i++)
             {
                 endX = this.col + deltaX[i];
-                endY = this.row + (deltaY[i] * direction)
-                if(board.isMoveLegal(x, y, endX, endY))
+                endY = this.row + (deltaY[i] * direction);
+                if(board.isMoveLegal(this.col, this.row, endX, endY))
                 {
                     res += 1;
                 }
@@ -799,8 +825,8 @@ namespace ChessUI
             int res = 0;
 
             // 4 directions Rook can go
-            int[] dirX = { 1, -1, 0, 0 }
-            int[] dirY = { 0, 0, 1, -1 }
+            int[] dirX = { 1, -1, 0, 0 };
+            int[] dirY = { 0, 0, 1, -1 };
 
             int tmpX, startX = this.col;
             int tmpY, startY = this.row;
@@ -821,8 +847,8 @@ namespace ChessUI
                     tmpY += dirY[i];
                 }
             }
-            
-            return res
+
+            return res;
         }
     }
     
@@ -854,8 +880,8 @@ namespace ChessUI
             int res = 0;
 
             // 8 directions Knight can go
-            int[] dirX = { 1, 2, 2, 1, -1, -2, -2, -1 }
-            int[] dirY = { 2, 1, -1, -2, 2, 1, -1, -2 }
+            int[] dirX = { 1, 2, 2, 1, -1, -2, -2, -1 };
+            int[] dirY = { 2, 1, -1, -2, 2, 1, -1, -2 };
             
             // go to each spot on board summing legal moves along way
             for (int i = 0; i < 8; i++)
@@ -866,7 +892,7 @@ namespace ChessUI
                 }    
             }
 
-            return res
+            return res;
         }
     }
     
@@ -917,8 +943,8 @@ namespace ChessUI
             int res = 0;
 
             // 4 directions Bishop can go
-            int[] dirX = { 1, -1, 1, -1 }
-            int[] dirY = { 1, 1, -1, -1 }
+            int[] dirX = { 1, -1, 1, -1 };
+            int[] dirY = { 1, 1, -1, -1 };
 
             int tmpX, startX = this.col;
             int tmpY, startY = this.row;
@@ -940,7 +966,7 @@ namespace ChessUI
                 }
             }
 
-            return res
+            return res;
         }
     }
     
@@ -1037,8 +1063,8 @@ namespace ChessUI
             int res = 0;
 
             // 8 directions Queen can go
-            int[] dirX = { 1, -1, 0, 0, 1, -1, 1, -1 }
-            int[] dirY = { 0, 0, 1, -1, 1, 1, -1, -1 }
+            int[] dirX = { 1, -1, 0, 0, 1, -1, 1, -1 };
+            int[] dirY = { 0, 0, 1, -1, 1, 1, -1, -1 };
 
             int tmpX, startX = this.col;
             int tmpY, startY = this.row;
@@ -1060,7 +1086,7 @@ namespace ChessUI
                 }
             }
 
-            return res
+            return res;
         }
     }
     
@@ -1156,8 +1182,8 @@ namespace ChessUI
             int res = 0;
 
             // 8 directions king can go
-            int[] dirX = { 1, -1, 0, 0, 1, -1, 1, -1 }
-            int[] dirY = { 0, 0, 1, -1, 1, 1, -1, -1 }
+            int[] dirX = { 1, -1, 0, 0, 1, -1, 1, -1 };
+            int[] dirY = { 0, 0, 1, -1, 1, 1, -1, -1 };
 
             // go to each spot on board summing legal moves along way
             for (int i = 0; i < 8; i++)
@@ -1168,9 +1194,14 @@ namespace ChessUI
                 }
             }
 
-            return res
+            return res;
         }
     }
 
-    
+    public enum GameOverType
+    {
+        NotOver,
+        CheckMate,
+        StaleMate
+    }
 }
