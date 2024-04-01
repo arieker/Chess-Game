@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
 namespace ChessUI
@@ -632,22 +633,13 @@ namespace ChessUI
         public abstract bool isMoveValid(BoardLogic glBoard, int startX, int startY, int endX, int endY);
         // method to see if it goes off board.
 
+        public abstract int numLegalMoves(BoardLogic board);
 
         public bool IsValidPosition(int x, int y)
         {
             return x >= 0 && x < 8 && y >= 0 && y < 8;
         }
-
-        public override string ToString()
-        {
-            char color = 'w';
-            if (!this.isWhite)
-            {
-                color = 'b';
-            }
-            
-            return $"{color} {this.GetType()}";
-        }
+        
     }
 
     public class PawnLogic : PieceLogic
@@ -703,7 +695,39 @@ namespace ChessUI
 
         }
 
+        public override int numLegalMoves(BoardLogic board)
+        {
+            // return var
+            int res = 0;
+            
+            // direction pawn moves to
+            int direction = 1;
+            if (!this.getIsWhite)
+            {
+                direction = -1;
+            }
+
+            // all the possiple moves
+            int[] deltaX = { 0, 0, 1, -1}
+            int[] deltaY = { 1, 2, 1, 1}
+            int endX;
+            int endY;
+
+           // see if any are legal
+            for (int i = 0; i < 4; i++)
+            {
+                endX = this.col + deltaX[i];
+                endY = this.row + (deltaY[i] * direction)
+                if(board.isMoveLegal(x, y, endX, endY))
+                {
+                    res += 1;
+                }
+            }
+
+            return res;
+        }
     }
+
     public class RookLogic : PieceLogic 
     {
         //Use constructor in abstract PieceLogic class
@@ -768,7 +792,40 @@ namespace ChessUI
                  return true;
             }
         }
+
+        public override int numLegalMoves(BoardLogic board)
+        {
+            // initialize return var
+            int res = 0;
+
+            // 4 directions Rook can go
+            int[] dirX = { 1, -1, 0, 0 }
+            int[] dirY = { 0, 0, 1, -1 }
+
+            int tmpX, startX = this.col;
+            int tmpY, startY = this.row;
+
+            // go in each dir while not off board, summing legal moves along way
+            for (int i = 0; i < 4; i++)
+            {
+                tmpX = startX + dirX[i];
+                tmpY = startY + dirY[i];
+                while(IsValidPosition(tmpX, tmpY))
+                {
+                    if(board.isMoveLegal(startX, startY, tmpX, tmpY))
+                    {
+                        res += 1;
+                    }
+
+                    tmpX += dirX[i];
+                    tmpY += dirY[i];
+                }
+            }
+            
+            return res
+        }
     }
+    
     public class KnightLogic : PieceLogic 
     {
         //Use constructor in abstract PieceLogic class 
@@ -790,7 +847,29 @@ namespace ChessUI
             ///make sure 1 of them has the value 2 and the other has the value 1
             return ((deltaX == 2 && deltaY == 1) || (deltaX == 1 && deltaY == 2));
         }
+
+        public override int numLegalMoves(BoardLogic board)
+        {
+            // initialize return var
+            int res = 0;
+
+            // 8 directions Knight can go
+            int[] dirX = { 1, 2, 2, 1, -1, -2, -2, -1 }
+            int[] dirY = { 2, 1, -1, -2, 2, 1, -1, -2 }
+            
+            // go to each spot on board summing legal moves along way
+            for (int i = 0; i < 8; i++)
+            {
+                if (board.isMoveLegal(this.col, this.row, this.col + dirX[i], this.row + dirY[i]))
+                {
+                    res += 1;
+                }    
+            }
+
+            return res
+        }
     }
+    
     public class BishopLogic : PieceLogic 
     {
         //Use constructor in abstract PieceLogic class 
@@ -831,7 +910,40 @@ namespace ChessUI
             // along a valid path, not obstructed, not off the board 
             return true;
         }
+
+        public override int numLegalMoves(BoardLogic board)
+        {
+            // initialize return var
+            int res = 0;
+
+            // 4 directions Bishop can go
+            int[] dirX = { 1, -1, 1, -1 }
+            int[] dirY = { 1, 1, -1, -1 }
+
+            int tmpX, startX = this.col;
+            int tmpY, startY = this.row;
+
+            // go in each dir while not off board, summing legal moves along way
+            for (int i = 0; i < 4; i++)
+            {
+                tmpX = startX + dirX[i];
+                tmpY = startY + dirY[i];
+                while (IsValidPosition(tmpX, tmpY))
+                {
+                    if (board.isMoveLegal(startX, startY, tmpX, tmpY))
+                    {
+                        res += 1;
+                    }
+
+                    tmpX += dirX[i];
+                    tmpY += dirY[i];
+                }
+            }
+
+            return res
+        }
     }
+    
     public class QueenLogic : PieceLogic 
     {
         //Use constructor in abstract PieceLogic class 
@@ -918,7 +1030,40 @@ namespace ChessUI
             }
 
         }
+
+        public override int numLegalMoves(BoardLogic board)
+        {
+            // initialize return var
+            int res = 0;
+
+            // 8 directions Queen can go
+            int[] dirX = { 1, -1, 0, 0, 1, -1, 1, -1 }
+            int[] dirY = { 0, 0, 1, -1, 1, 1, -1, -1 }
+
+            int tmpX, startX = this.col;
+            int tmpY, startY = this.row;
+
+            // go in each dir while not off board, summing legal moves along way
+            for (int i = 0; i < 8; i++)
+            {
+                tmpX = startX + dirX[i];
+                tmpY = startY + dirY[i];
+                while (IsValidPosition(tmpX, tmpY))
+                {
+                    if (board.isMoveLegal(startX, startY, tmpX, tmpY))
+                    {
+                        res += 1;
+                    }
+
+                    tmpX += dirX[i];
+                    tmpY += dirY[i];
+                }
+            }
+
+            return res
+        }
     }
+    
     public class KingLogic : PieceLogic
     {
         // store pieces that are checking the king. 
@@ -975,6 +1120,7 @@ namespace ChessUI
         {
             inCheck = false;
         }
+
         public override bool isMoveValid(BoardLogic glBoard, int startX, int startY, int endX, int endY)
         {
             //check to see if they start or end off the board
@@ -1003,5 +1149,28 @@ namespace ChessUI
                 return false;
             }
         }
+
+        public override int numLegalMoves(BoardLogic board)
+        {
+            // initialize return var
+            int res = 0;
+
+            // 8 directions king can go
+            int[] dirX = { 1, -1, 0, 0, 1, -1, 1, -1 }
+            int[] dirY = { 0, 0, 1, -1, 1, 1, -1, -1 }
+
+            // go to each spot on board summing legal moves along way
+            for (int i = 0; i < 8; i++)
+            {
+                if (board.isMoveLegal(this.col, this.row, this.col + dirX[i], this.row + dirY[i]))
+                {
+                    res += 1;
+                }
+            }
+
+            return res
+        }
     }
+
+    
 }
