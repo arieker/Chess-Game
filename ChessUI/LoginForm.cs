@@ -82,22 +82,22 @@ namespace ChessUI
                             Program.currentUser = currentUser;
                         }
                         dr.Close();
-                        MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `status` = 'Online' WHERE (`username` = '" + username + "');", con);
-                        MySqlDataReader dr2 = onlinecommand.ExecuteReader();
-                        Program.currentUser.setStatus("Online");
-                        MessageBox.Show("Logged in Successfully");
-                        Console.Out.WriteLine("Logged in Successfully");
-                        con.Close();
-
                         //establish connection to server
                         int port = 31415;
-                        string ip = "127.0.0.1";
+                        string ip = "44.197.113.111";
                         Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
                         ClientSocket.Connect(ep);
                         string serveruser = Program.currentUser.getUsername();
                         Program.currentSocket = ClientSocket;
                         Program.currentSocket.Send(System.Text.Encoding.ASCII.GetBytes(serveruser), 0, serveruser.Length, SocketFlags.None);
+
+                        MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `status` = 'Online' WHERE (`username` = '" + username + "');", con);
+                        MySqlDataReader dr2 = onlinecommand.ExecuteReader();
+                        Program.currentUser.setStatus("Online");
+                        MessageBox.Show("Logged in Successfully");
+                        Console.Out.WriteLine("Logged in Successfully");
+                        con.Close();
 
                         
                         Program.awaitThread.Start();

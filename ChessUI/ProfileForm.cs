@@ -54,7 +54,7 @@ namespace ChessUI
         private void sendMatchRequestButton_Click(object sender, EventArgs e)
         {
             int port = 31415;
-            string ip = "127.0.0.1";
+            string ip = "34.201.20.42";
             Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
             ClientSocket.Connect(ep); 
