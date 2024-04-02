@@ -97,7 +97,7 @@ public class ChessBoardForm : Form
         int formHeight = boardSize * squareSize;
 
         // Set the size of the form
-        this.ClientSize = new Size(formWidth, formHeight);
+        this.ClientSize = new Size(formWidth, formHeight+100);
 
         // Register the DrawChessboard method to handle painting events
         this.Paint += new PaintEventHandler(DrawChessboard);
@@ -214,8 +214,8 @@ public class ChessBoardForm : Form
             // 
             this.AccessibleDescription = "";
             this.AccessibleName = "";
-            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(725, 598);
+            this.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.ClientSize = new System.Drawing.Size(496, 473);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Name = "ChessBoardForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
