@@ -45,7 +45,7 @@ namespace ChessServer
             String ip  = "127.0.0.1";
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Any, port);
             listener.Bind(ep);
             listener.Listen(100);
             Console.WriteLine("ChessServer is listening");
