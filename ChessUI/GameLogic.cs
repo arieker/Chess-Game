@@ -46,30 +46,33 @@ namespace ChessUI
      *    ________________________________ X
      * 
      */
-   
+
     public class BoardLogic
     {
         // 2d array of the spotsto represent the board for the logic
         private Square[,] LogicBoard = new Square[8, 8];
-        
+
         private KingLogic whiteKing = new KingLogic(PieceColor.White, 4, 0);
         private KingLogic blackKing = new KingLogic(PieceColor.Black, 4, 7);
 
-        private ArrayList whitePieces = new ArrayList();
-        private ArrayList blackPieces = new ArrayList();
+        private PieceLogic[] whitePieces = new PieceLogic[16];
+        private PieceLogic[] blackPieces = new PieceLogic[16];
         
         private bool whitesTurn;
 
         //initalize the board and put the pieces in their correct starting spot
         public BoardLogic() 
         {
+            int pieceIndex = 0;
             // Initialize pawns for both white and black
             for (int x = 0; x < 8; x++)
             {
                 LogicBoard[x, 1] = new Square(new PawnLogic(PieceColor.White, x, 1));
-                whitePieces.Add(LogicBoard[x, 1].piece);
+                whitePieces[pieceIndex] = LogicBoard[x, 1].piece;
                 LogicBoard[x, 6] = new Square(new PawnLogic(PieceColor.Black, x, 6));
-                blackPieces.Add(LogicBoard[x, 6].piece);
+                blackPieces[pieceIndex] = LogicBoard[x, 6].piece;
+
+                pieceIndex += 1;
             }
 
             // Initialize rooks
@@ -105,9 +108,11 @@ namespace ChessUI
                 LogicBoard[x, 3] = new Square(null);
                 LogicBoard[x, 4] = new Square(null);
                 LogicBoard[x, 5] = new Square(null);
-                
-                whitePieces.Add(LogicBoard[x, 0].piece);
-                blackPieces.Add(LogicBoard[x, 7].piece);
+
+                whitePieces[pieceIndex] = LogicBoard[x, 0].piece;
+                blackPieces[pieceIndex] = LogicBoard[x, 7].piece;
+
+                pieceIndex += 1;
 
             }
 
@@ -563,7 +568,7 @@ namespace ChessUI
             GameOverType res = GameOverType.NotOver;
 
             //get all the pieces and the king of whoevers turn it is
-            ArrayList pieces = whitesTurn ? whitePieces : blackPieces;
+            PieceLogic[] pieces = whitesTurn ? whitePieces : blackPieces;
             KingLogic king = whitesTurn ? whiteKing : blackKing;
             
             //for each piece get the number of legal moves they have. 
