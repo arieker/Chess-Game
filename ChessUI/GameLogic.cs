@@ -773,8 +773,8 @@ namespace ChessUI
             }
 
             // check if ending position alligns with piece rules 
-            // either the x position does not change or the y does not change
-            if(startX != endX || startY != endY) 
+            // either the x position changes or the y changes, not both and not neither
+            if((startX == endX) != (startY == endY))
             {
                 return false;
             }
