@@ -1,12 +1,16 @@
+using ChessUI;
 using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+
 
 public class ChessBoardForm : Form
 {
     private const int boardSize = 8;
     private const int squareSize = 100;
+    BoardLogic boardLogic = new BoardLogic();
     private readonly Piece[,] board = new Piece[boardSize, boardSize];
     private readonly Image[,] pieceImages = new Image[6, 2]; // 6 types of pieces x 2 colors
 
@@ -63,10 +67,12 @@ public class ChessBoardForm : Form
         // Initialize pawns for both white and black
         for (int col = 0; col < boardSize; col++)
         {
-            board[1, col] = new Pawn(PieceColor.Black, pieceImages[(int)PieceType.Pawn, (int)PieceColor.Black]);
-            board[6, col] = new Pawn(PieceColor.White, pieceImages[(int)PieceType.Pawn, (int)PieceColor.White]);
+            PawnLogic pawnLogicB = new PawnLogic(PieceColor.Black, col, 1);
+            board[1, col] = new Pawn(PieceColor.Black, pieceImages[(int)PieceType.Pawn, (int)PieceColor.Black], pawnLogicB);
+            PawnLogic pawnLogicW = new PawnLogic(PieceColor.White, col, 6);
+            board[6, col] = new Pawn(PieceColor.White, pieceImages[(int)PieceType.Pawn, (int)PieceColor.White], pawnLogicW);
         }
-
+        /*
         // Initialize rooks
         board[0, 0] = new Rook(PieceColor.Black, pieceImages[(int)PieceType.Rook, (int)PieceColor.Black]);
         board[0, 7] = new Rook(PieceColor.Black, pieceImages[(int)PieceType.Rook, (int)PieceColor.Black]);
@@ -93,6 +99,7 @@ public class ChessBoardForm : Form
         board[0, 4] = new King(PieceColor.Black, pieceImages[(int)PieceType.King, (int)PieceColor.Black]);
         board[7, 4] = new King(PieceColor.White, pieceImages[(int)PieceType.King, (int)PieceColor.White]);
 
+        */
         int formWidth = boardSize * squareSize;
         int formHeight = boardSize * squareSize;
 
@@ -135,19 +142,24 @@ public class ChessBoardForm : Form
 
         if (selectedPiece == null)
         {
+            
             // If no piece is selected, check if there's a piece at the clicked position
             if (board[row, col] != null)
             {
                 // Select the piece at the clicked position
                 selectedPiece = board[row, col];
                 selectedSquare = new Point(col, row);
+
             }
         }
         else
         {
             // If a piece is already selected, move the selected piece to the clicked position
-            if (IsValidMove(selectedSquare, new Point(col, row)))
+            
+            if (selectedPiece.pieceLogic.isMoveValid(boardLogic, selectedPiece.pieceLogic.col, selectedPiece.pieceLogic.row, col, row)) 
             {
+                MessageBox.Show("Start" + selectedPiece.pieceLogic.col + selectedPiece.pieceLogic.row + "End" + col + row);
+
                 // Move the selected piece to the destination square
                 board[row, col] = selectedPiece;
                 board[selectedSquare.Y, selectedSquare.X] = null;
@@ -156,9 +168,15 @@ public class ChessBoardForm : Form
                 InvalidateCell(selectedSquare);
                 InvalidateCell(new Point(col, row));
 
+                //Update piece position
+                selectedPiece.pieceLogic.col = col;
+                selectedPiece.pieceLogic.row = row;
+
                 // Reset selected piece and square
                 selectedPiece = null;
                 selectedSquare = Point.Empty;
+
+                
             }
             else
             {
@@ -230,6 +248,7 @@ public enum PieceColor { White, Black }
 
 public abstract class Piece
 {
+    public PieceLogic pieceLogic;
     public PieceColor Color { get; set; }
     public Image Image { get; set; }
     public abstract void Draw(Graphics g, int x, int y, int size);
@@ -237,10 +256,11 @@ public abstract class Piece
 
 public class Pawn : Piece
 {
-    public Pawn(PieceColor color, Image image)
+    public Pawn(PieceColor color, Image image, PieceLogic pieceLogic)
     {
         Color = color;
         Image = image;
+        this.pieceLogic = pieceLogic;
     }
 
     public override void Draw(Graphics g, int x, int y, int size)

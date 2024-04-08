@@ -687,10 +687,10 @@ namespace ChessUI
             }
 
             // if it is a black pawn moving we need the signFlipper to be neg 
-            int signFlipper = 1;
+            int signFlipper = -1;
             if(!this.getIsWhite)
             {
-                signFlipper = -1;
+                signFlipper = 1;
             }
 
             // if one up check that it is not filled
@@ -704,7 +704,7 @@ namespace ChessUI
             {
                 // if the square 1 foreward is not filled AND the square 2 foreward isn not filled AND it is their first move
                 // then and only then can a pawn move 2 spaces foreward
-                return !(glBoard.isSquareFilled(endX, endY) && glBoard.isSquareFilled(endX, endY - (1 * signFlipper))) && FirstMove;
+                return !(glBoard.isSquareFilled(endX, endY) || glBoard.isSquareFilled(endX, endY - (1 * signFlipper))) && FirstMove;
             }
             
             // else if diag right 1 pos
