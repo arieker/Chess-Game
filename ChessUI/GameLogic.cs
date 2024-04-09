@@ -386,7 +386,7 @@ namespace ChessUI
             if(!(endX >= 0 && endX < 8 && endY >= 0 && endY < 8)) return res;
             
             // if pieces are oppsite color and attacker can attack king
-            if((king.getIsWhite != attacker.getIsWhite) && attacker.isMoveValid(this, endX, endY, king.col, king.row))
+            if((king.getIsWhite != attacker.getIsWhite) && isMoveLegal(endX, endY, king.col, king.row))
             {
                 // add to the attack list and set 
                 king.nowChecking(attacker); // won't add if already in 
@@ -401,7 +401,7 @@ namespace ChessUI
             int yDir;
             
             // in not a striaght line or an attackable diagnoal then not attackable
-            if(!(deltaX == 0 || deltaY == 0) && !(Math.Abs(deltaX) == Math.Abs(deltaX)))
+            if(!(deltaX == 0 || deltaY == 0) && !(Math.Abs(deltaX) == Math.Abs(deltaY)))
             {
                 return res;
             }
@@ -445,7 +445,7 @@ namespace ChessUI
                         res = foundPiece;                        
                     }
                     // else if the ray is a diag, needs to be a bishop
-                    else if((Math.Abs(deltaX) == Math.Abs(deltaX)) && foundPiece is BishopLogic)
+                    else if((Math.Abs(deltaX) == Math.Abs(deltaY)) && foundPiece is BishopLogic)
                     {
                         king.nowChecking(foundPiece);
                         res = foundPiece;                        
@@ -592,6 +592,20 @@ namespace ChessUI
             res = king.isInCheck ? GameOverType.CheckMate : GameOverType.StaleMate;
             return res; 
         }
+        
+        public bool isKingUnderCheck(PieceColor color)
+        {
+            // get the approiate king
+            KingLogic king = (color == PieceColor.White) ? whiteKing : blackKing;
+            //return if he is under check
+            return king.isInCheck;
+        }
+
+        public PieceLogic getPieceAtLocation(int x, int y)
+        {
+            if (x >= 0 && x < 8 && y >= 0 && y < 8) return null;
+            return LogicBoard[x, y].piece;
+        }
     }
 
     public abstract class PieceLogic
@@ -680,6 +694,7 @@ namespace ChessUI
 
         public override bool isMoveValid(BoardLogic glBoard, int startX, int startY, int endX, int endY)
         {
+            
             // if they start of end off the board it is not valid
             if (!IsValidPosition(startX, startY) || !IsValidPosition(endX, endY))
             {
@@ -710,15 +725,24 @@ namespace ChessUI
             // else if diag right 1 pos
             else if (startY + (1 * signFlipper) == endY && startX + (1 * signFlipper) == endX)
             {
-                // must be filled to move diag
-                return glBoard.isSquareFilled(endX, endY);
+                // must be filled and oppsite colors to move diag
+                if (glBoard.isSquareFilled(endX, endY))
+                {
+                    PieceLogic piece = glBoard.getPieceAtLocation(endX, endY);
+                    return this.getIsWhite != piece.getIsWhite;
+                }
+                
             }
             
             // else if diag left 1 pos
             else if (startY + (1 * signFlipper) == endY && startX - (1 * signFlipper) == endX)
             {
-                // must be filled to move diag
-                return glBoard.isSquareFilled(endX, endY);
+                // must be filled and oppsite colors to move diag
+                if (glBoard.isSquareFilled(endX, endY))
+                {
+                    PieceLogic piece = glBoard.getPieceAtLocation(endX, endY);
+                    return this.getIsWhite != piece.getIsWhite;
+                }
             }
 
             // else not a valid move
