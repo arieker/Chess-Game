@@ -694,7 +694,12 @@ namespace ChessUI
 
         public override bool isMoveValid(BoardLogic glBoard, int startX, int startY, int endX, int endY)
         {
-            
+            //ensure this pieceloc matches starting loc on the board it is trying to move on
+            if (startX != this.col || startY != this.row)
+            {
+                return false;
+            }
+
             // if they start of end off the board it is not valid
             if (!IsValidPosition(startX, startY) || !IsValidPosition(endX, endY))
             {
@@ -790,6 +795,12 @@ namespace ChessUI
 
         public override bool isMoveValid(BoardLogic glBoard, int startX, int startY, int endX, int endY)
         {
+            //ensure this pieceloc matches starting loc on the board it is trying to move on
+            if (startX != this.col || startY != this.row)
+            {
+                return false;
+            }
+
             // if they start of end off the board it is not valid
             if (!IsValidPosition(startX, startY) || !IsValidPosition(endX, endY))
             {
@@ -887,6 +898,12 @@ namespace ChessUI
         public KnightLogic(PieceColor color, int x, int y) : base(color, x, y) { }
         public override bool isMoveValid(BoardLogic glBoard, int startX, int startY, int endX, int endY)
         {
+            //ensure this pieceloc matches starting loc on the board it is trying to move on
+            if (startX != this.col || startY != this.row)
+            {
+                return false;
+            }
+
             //check to see if they start or end off the board
             if (!IsValidPosition(startX, startY) || !IsValidPosition(endX, endY))
             {
@@ -931,6 +948,12 @@ namespace ChessUI
         public BishopLogic(PieceColor color, int x, int y) : base(color, x, y) { }
         public override bool isMoveValid(BoardLogic glBoard, int startX, int startY, int endX, int endY)
         {
+            //ensure this pieceloc matches starting loc on the board it is trying to move on
+            if (startX != this.col || startY != this.row)
+            {
+                return false;
+            }
+
             //check to see if they start or end off the board
             if (!IsValidPosition(startX, startY) || !IsValidPosition(endX, endY))
             {
@@ -1005,6 +1028,12 @@ namespace ChessUI
         public QueenLogic(PieceColor color, int x, int y) : base(color, x, y) { }
         public override bool isMoveValid(BoardLogic glBoard, int startX, int startY, int endX, int endY)
         {
+            //ensure this pieceloc matches starting loc on the board it is trying to move on
+            if (startX != this.col || startY != this.row)
+            {
+                return false;
+            }
+
             //check to see if they start or end off the board
             if (!IsValidPosition(startX, startY) || !IsValidPosition(endX, endY))
             {
@@ -1178,6 +1207,12 @@ namespace ChessUI
 
         public override bool isMoveValid(BoardLogic glBoard, int startX, int startY, int endX, int endY)
         {
+            //ensure this pieceloc matches starting loc on the board it is trying to move on
+            if (startX != this.col || startY != this.row)
+            {
+                return false;
+            }
+
             //check to see if they start or end off the board
             if (!IsValidPosition(startX, startY) || !IsValidPosition(endX, endY))
             {
