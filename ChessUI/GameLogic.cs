@@ -231,12 +231,6 @@ namespace ChessUI
             LogicBoard[startX, startY].piece = null;
             LogicBoard[startX, startY].isFilled = false;
 
-            // update first move var
-            if (movedPiece.FirstMove == false)
-            {
-                movedPiece.FirstMove = true;
-            }
-
             // if it is a pawn promote if necessary
             if (movedPiece is PawnLogic) promote(endX, endY);
             // if it is a castle move as necessary
@@ -248,6 +242,12 @@ namespace ChessUI
                     removeChecks(friendlyKing);
                     return false;
                 }
+            }
+
+            // update first move var
+            if (movedPiece.FirstMove == false)
+            {
+                movedPiece.FirstMove = true;
             }
 
             //remove check (if other pieces are no longer checking friendly  king), and add new ones
@@ -315,7 +315,7 @@ namespace ChessUI
                 LogicBoard[endX + sign, endY].piece.FirstMove = true;
 
                 //Check that the king is not under attack now
-                if (isUnderAttack(LogicBoard[endX, endY].piece, endX, endY))
+                if (!LogicBoard[endX + sign, endY].piece.FirstMove || !king.FirstMove || isUnderAttack(LogicBoard[endX, endY].piece, endX, endY))
                 {
                     // if he is revert changes
                     LogicBoard[startX, startY].piece = LogicBoard[endX, endY].piece;
@@ -561,7 +561,6 @@ namespace ChessUI
             return false;
         }
     
-
         public GameOverType isGameOver() 
         {
             // initialize result to the game not being over
