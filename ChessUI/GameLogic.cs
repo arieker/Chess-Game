@@ -706,10 +706,10 @@ namespace ChessUI
             }
 
             // if it is a black pawn moving we need the signFlipper to be neg 
-            int signFlipper = -1;
+            int signFlipper = 1;
             if(!this.getIsWhite)
             {
-                signFlipper = 1;
+                signFlipper = -1;
             }
 
             // if one up check that it is not filled
