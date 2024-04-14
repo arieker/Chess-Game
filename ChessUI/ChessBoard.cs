@@ -14,6 +14,9 @@ public class ChessBoardForm : Form
     private readonly Piece[,] board = new Piece[boardSize, boardSize];
     private readonly Image[,] pieceImages = new Image[6, 2]; // 6 types of pieces x 2 colors
 
+    private Point prevMoveStartSquare = Point.Empty;
+    private Point prevMoveEndSquare = Point.Empty;
+
     public ChessBoardForm()
     {
         InitializeComponent();
@@ -119,7 +122,7 @@ public class ChessBoardForm : Form
             for (int col = 0; col < boardSize; col++)
             {
                 bool isLightSquare = (row + col) % 2 == 0;
-                Brush squareBrush = (isLightSquare) ? Brushes.WhiteSmoke : Brushes.CornflowerBlue;
+                Brush squareBrush = (isLightSquare) ? Brushes.GhostWhite : Brushes.CornflowerBlue;
 
                 int x = col * squareSize;
                 int y = row * squareSize;
@@ -130,6 +133,28 @@ public class ChessBoardForm : Form
                 board[row, col]?.Draw(g, x, y, squareSize);
             }
         }
+
+        // Highlight previous move
+        if (prevMoveStartSquare != Point.Empty && prevMoveEndSquare != Point.Empty)
+        {
+            int thickness = 6;
+            using (Pen pen = new Pen(Color.Yellow, thickness))
+            {
+
+                int startX = prevMoveStartSquare.X * squareSize;
+                int startY = prevMoveStartSquare.Y * squareSize;
+                int endX = prevMoveEndSquare.X * squareSize;
+                int endY = prevMoveEndSquare.Y * squareSize;
+                
+
+                g.DrawRectangle(pen, startX + thickness/2, startY + thickness / 2, squareSize - thickness, squareSize - thickness);
+                g.DrawRectangle(pen, endX + thickness/2, endY + thickness / 2, squareSize - thickness, squareSize - thickness);
+                
+            }
+        }
+
+       
+
     }
 
     private Piece selectedPiece = null;
@@ -163,11 +188,23 @@ public class ChessBoardForm : Form
                 board[row, col] = selectedPiece;
                 board[selectedSquare.Y, selectedSquare.X] = null;
 
-                // Invalidate the starting cell and the destination cell
+
+                InvalidateCell(prevMoveStartSquare);
+                InvalidateCell(prevMoveEndSquare);
+
+
+                // Record the previous move
+                prevMoveStartSquare = selectedSquare;
+                prevMoveEndSquare = new Point(col, row);
+
+
+
+                // Invalidate the starting cell, the destination cell, and the previous move cells
                 InvalidateCell(selectedSquare);
                 InvalidateCell(new Point(col, row));
 
-              
+
+
 
                 // Reset selected piece and square
                 selectedPiece = null;
