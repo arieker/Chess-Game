@@ -5,6 +5,8 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net.Sockets;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,6 +15,7 @@ namespace ChessUI
 {
     public partial class ProfileForm : Form
     {
+        String username = "";
         public ProfileForm(User user)
         {
             Debug.Write(user.getWins());
@@ -22,6 +25,7 @@ namespace ChessUI
 
             nicknameTextLabel.Text = user.getNickname();
             usernameTextLabel.Text = user.getUsername();
+
             openingDateTextLabel.Text = user.getDate();
             if (Program.currentUser == user)
             {
@@ -49,7 +53,15 @@ namespace ChessUI
 
         private void sendMatchRequestButton_Click(object sender, EventArgs e)
         {
-            // send match request to someone
+            int port = 31415;
+            string ip = "44.221.170.210";
+            Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+            ClientSocket.Connect(ep); 
+            string request = "sendRequest " + usernameTextLabel.Text + " " + Program.currentUser.getUsername();
+            Console.Out.WriteLine(request);
+            ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
+
         }
     }
 }

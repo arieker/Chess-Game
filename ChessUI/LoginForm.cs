@@ -6,6 +6,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net.Sockets;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,7 @@ using System.Windows.Forms;
 using MySql;
 using MySql.Data.MySqlClient;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Threading;
 
 namespace ChessUI
 {
@@ -64,22 +67,40 @@ namespace ChessUI
                     // checks if username and password holds a valid entry
                     if (loginTable.Rows[0][0].ToString() == "1")
                     {
-                        MessageBox.Show("Logged in Successfully");
-                        Console.Out.WriteLine("Logged in Successfully");
 
                         // set currentuser static variable
                         MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + username + "'", con);
                         MySqlDataReader dr = command.ExecuteReader();
                         if (dr.Read())
                         {
+                            if (dr[7].ToString() == "Online")
+                            {
+                                MessageBox.Show("This user is already logged in.");
+                                return false;
+                            }
                             User currentUser = new User(dr[0].ToString(), dr[2].ToString(), Int32.Parse(dr[3].ToString()), Int32.Parse(dr[4].ToString()), Int32.Parse(dr[5].ToString()), dr[6].ToString(), dr[7].ToString());
                             Program.currentUser = currentUser;
                         }
                         dr.Close();
+                        //establish connection to server
+                        int port = 31415;
+                        string ip = "44.221.170.210";
+                        Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                        IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+                        ClientSocket.Connect(ep);
+                        string serveruser = Program.currentUser.getUsername();
+                        Program.currentSocket = ClientSocket;
+                        Program.currentSocket.Send(System.Text.Encoding.ASCII.GetBytes(serveruser), 0, serveruser.Length, SocketFlags.None);
+
                         MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `status` = 'Online' WHERE (`username` = '" + username + "');", con);
                         MySqlDataReader dr2 = onlinecommand.ExecuteReader();
                         Program.currentUser.setStatus("Online");
+                        MessageBox.Show("Logged in Successfully");
+                        Console.Out.WriteLine("Logged in Successfully");
                         con.Close();
+
+                        
+                        Program.awaitThread.Start();
                         return true;
                     }
                     else
