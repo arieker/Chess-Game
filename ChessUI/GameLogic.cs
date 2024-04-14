@@ -865,6 +865,7 @@ namespace ChessUI
             else
             {
                  // 1 if right, -1 if left
+
                  int direction = (endX - startX) / Math.Abs(endX - startX);
                  // how long to loop
                  int deltaX = Math.Abs(endX - startX);
