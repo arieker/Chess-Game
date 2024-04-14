@@ -121,13 +121,20 @@ namespace ChessUI
 
         public bool isSquareFilled(int x, int y)
         {
-            return LogicBoard[x, y].isFilled;
+            //if out of bounds ret false
+            if (x > 7 || y > 7 || x < 0 || y < 0) { return false; }
+            //else get piece and see if it is not null
+            PieceLogic piece = LogicBoard[x, y].piece;
+            if (piece == null) return false;
+            return true;
         }
 
         public bool isMoveLegal(int startX, int startY, int endX, int endY)
         {
             // check if not filled then no piece to move
             if (!LogicBoard[startX, startY].isFilled) return false;
+            // can't move to same location
+            if(startX == endX && startY == endY) return false;
 
             // get piece to be moved and its king
             PieceLogic movedPiece = LogicBoard[startX, startY].piece;
@@ -206,7 +213,6 @@ namespace ChessUI
 
             }
 
-            // if it is not return false
             return false;
         }
 
@@ -220,7 +226,7 @@ namespace ChessUI
 
             //move pieces
             //kill pieces it is moving on
-            if (!(LogicBoard[endX, endY].piece is null))
+            if (LogicBoard[endX, endY].piece != null)
             { 
                 LogicBoard[endX, endY].piece.isKilled = true;
             }
@@ -393,6 +399,7 @@ namespace ChessUI
                 res = attacker;
             }
 
+
             //Check the ray from the old location. See if it opened up an attack
             int x = king.col; int y = king.row;
             int deltaX = endX - x;
@@ -457,7 +464,7 @@ namespace ChessUI
                 x += xDir;
                 y += yDir;
             }
-
+            
             return res;
         }
     
@@ -468,8 +475,8 @@ namespace ChessUI
             int x = startX;
             int y = startY;
 
-            if (x < 8 || y < 8 || x > 0 || y > 0) {  return true; }
-
+            if (x > 7 || y > 7 || x < 0 || y < 0) {  return true; }
+            
             //pawns first
             /// pawns attack from... north for white, south for black
             int pawnY = piece.getIsWhite ? 1 : -1;
@@ -556,7 +563,7 @@ namespace ChessUI
                 if (this.isSquareFilled(x, y))
                     if (LogicBoard[x, y].piece is KnightLogic && (LogicBoard[x, y].piece.getIsWhite != piece.getIsWhite)) return true;
             }
-
+            
             // if get here no attackers
             return false;
         }
@@ -730,11 +737,12 @@ namespace ChessUI
             else if (startY + (1 * signFlipper) == endY && startX + (1 * signFlipper) == endX)
             {
                 // must be filled and oppsite colors to move diag
-                if (glBoard.isSquareFilled(endX, endY))
+                PieceLogic piece = glBoard.getPieceAtLocation(endX, endY);
+                if(piece == null)
                 {
-                    PieceLogic piece = glBoard.getPieceAtLocation(endX, endY);
-                    return this.getIsWhite != piece.getIsWhite;
+                    return false;
                 }
+                return this.getIsWhite != piece.getIsWhite;
                 
             }
             
@@ -742,11 +750,12 @@ namespace ChessUI
             else if (startY + (1 * signFlipper) == endY && startX - (1 * signFlipper) == endX)
             {
                 // must be filled and oppsite colors to move diag
-                if (glBoard.isSquareFilled(endX, endY))
+                PieceLogic piece = glBoard.getPieceAtLocation(endX, endY);
+                if (piece == null)
                 {
-                    PieceLogic piece = glBoard.getPieceAtLocation(endX, endY);
-                    return this.getIsWhite != piece.getIsWhite;
+                    return false;
                 }
+                return this.getIsWhite != piece.getIsWhite;
             }
 
             // else not a valid move
@@ -968,6 +977,10 @@ namespace ChessUI
             {
                 return false; // Not a diagonal move
             }
+            if(deltaX == 0 || deltaY == 0)
+            {
+                return false;
+            }
 
             // get the direction for the x and y in the form of 1 or -1
             int directionX = (endX - startX)/Math.Abs(endX - startX);
@@ -1048,6 +1061,10 @@ namespace ChessUI
             /// if moving diagonally, check if obstructed
             if (deltaX == deltaY) 
             {
+                if (deltaX == 0 || deltaY == 0)
+                {
+                    return false;
+                }
                 // get the direction for the x and y in the form of 1 or -1
                 int directionX = (endX - startX) / Math.Abs(endX - startX);
                 int directionY = (endY - startY) / Math.Abs(endY - startY);
@@ -1233,11 +1250,9 @@ namespace ChessUI
             {
                 return true;
             }
-            // else moving 1 square
-            else
-            {
-                return false;
-            }
+            // else not moving 1 square
+            return false;
+            
         }
 
         public override int numLegalMoves(BoardLogic board)
