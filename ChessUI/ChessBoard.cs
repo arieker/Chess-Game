@@ -14,6 +14,11 @@ public class ChessBoardForm : Form
     private const int duration = 60;
     public BoardLogic boardLogic;
     private readonly Piece[,] board = new Piece[boardSize, boardSize];
+    private GroupBox groupBox1;
+    private Label theirTimeLabelLabel;
+    private Label yourTimeLabelLabel;
+    private Label theirTimerLabel;
+    private Label yourTimerLabel;
     private readonly Image[,] pieceImages = new Image[6, 2]; // 6 types of pieces x 2 colors
 
     private Point prevMoveStartSquare = Point.Empty;
@@ -126,6 +131,10 @@ public class ChessBoardForm : Form
 
         // Set the size of the form
         this.ClientSize = new Size(formWidth+squareSize, formHeight);
+
+        //Move the winform box to the bottom
+        groupBox1.Top = this.ClientSize.Height - groupBox1.Height;
+        groupBox1.Text = ""; // make it prettier by removing the text on it
 
         // Register the DrawChessboard method to handle painting events
         this.Paint += new PaintEventHandler(DrawChessboard);
@@ -335,6 +344,76 @@ public class ChessBoardForm : Form
 
     private void InitializeComponent()
     {
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.theirTimeLabelLabel = new System.Windows.Forms.Label();
+            this.yourTimeLabelLabel = new System.Windows.Forms.Label();
+            this.theirTimerLabel = new System.Windows.Forms.Label();
+            this.yourTimerLabel = new System.Windows.Forms.Label();
+            this.groupBox1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.theirTimeLabelLabel);
+            this.groupBox1.Controls.Add(this.yourTimeLabelLabel);
+            this.groupBox1.Controls.Add(this.theirTimerLabel);
+            this.groupBox1.Controls.Add(this.yourTimerLabel);
+            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(600, 91);
+            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "groupBox1";
+            // 
+            // theirTimeLabelLabel
+            // 
+            this.theirTimeLabelLabel.AutoSize = true;
+            this.theirTimeLabelLabel.Location = new System.Drawing.Point(355, 56);
+            this.theirTimeLabelLabel.Name = "theirTimeLabelLabel";
+            this.theirTimeLabelLabel.Size = new System.Drawing.Size(90, 13);
+            this.theirTimeLabelLabel.TabIndex = 3;
+            this.theirTimeLabelLabel.Text = "Opponent\'s Time:";
+            // 
+            // yourTimeLabelLabel
+            // 
+            this.yourTimeLabelLabel.AutoSize = true;
+            this.yourTimeLabelLabel.Location = new System.Drawing.Point(387, 16);
+            this.yourTimeLabelLabel.Name = "yourTimeLabelLabel";
+            this.yourTimeLabelLabel.Size = new System.Drawing.Size(58, 13);
+            this.yourTimeLabelLabel.TabIndex = 2;
+            this.yourTimeLabelLabel.Text = "Your Time:";
+            // 
+            // theirTimerLabel
+            // 
+            this.theirTimerLabel.AutoSize = true;
+            this.theirTimerLabel.Location = new System.Drawing.Point(451, 56);
+            this.theirTimerLabel.Name = "theirTimerLabel";
+            this.theirTimerLabel.Size = new System.Drawing.Size(129, 13);
+            this.theirTimerLabel.TabIndex = 1;
+            this.theirTimerLabel.Text = "OPPONENT TIME HERE";
+            // 
+            // yourTimerLabel
+            // 
+            this.yourTimerLabel.AutoSize = true;
+            this.yourTimerLabel.Location = new System.Drawing.Point(451, 16);
+            this.yourTimerLabel.Name = "yourTimerLabel";
+            this.yourTimerLabel.Size = new System.Drawing.Size(99, 13);
+            this.yourTimerLabel.TabIndex = 0;
+            this.yourTimerLabel.Text = "USER TIME HERE";
+            // 
+            // ChessBoardForm
+            // 
+            this.AccessibleDescription = "";
+            this.AccessibleName = "";
+            this.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.ClientSize = new System.Drawing.Size(624, 601);
+            this.Controls.Add(this.groupBox1);
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Name = "ChessBoardForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.ResumeLayout(false);
         this.SuspendLayout();
         // 
         // ChessBoardForm
