@@ -50,7 +50,7 @@ namespace ChessUI
     public class BoardLogic
     {
         // 2d array of the spotsto represent the board for the logic
-        private Square[,] LogicBoard = new Square[8, 8];
+        public Square[,] LogicBoard = new Square[8, 8];
 
         private KingLogic whiteKing = new KingLogic(PieceColor.White, 4, 0);
         private KingLogic blackKing = new KingLogic(PieceColor.Black, 4, 7);
@@ -58,7 +58,7 @@ namespace ChessUI
         private PieceLogic[] whitePieces = new PieceLogic[16];
         private PieceLogic[] blackPieces = new PieceLogic[16];
         
-        private bool whitesTurn;
+        public bool whitesTurn;
 
         //initalize the board and put the pieces in their correct starting spot
         public BoardLogic() 
@@ -121,13 +121,20 @@ namespace ChessUI
 
         public bool isSquareFilled(int x, int y)
         {
-            return LogicBoard[x, y].isFilled;
+            //if out of bounds ret false
+            if (x > 7 || y > 7 || x < 0 || y < 0) { return false; }
+            //else get piece and see if it is not null
+            PieceLogic piece = LogicBoard[x, y].piece;
+            if (piece == null) return false;
+            return true;
         }
 
         public bool isMoveLegal(int startX, int startY, int endX, int endY)
         {
             // check if not filled then no piece to move
             if (!LogicBoard[startX, startY].isFilled) return false;
+            // can't move to same location
+            if(startX == endX && startY == endY) return false;
 
             // get piece to be moved and its king
             PieceLogic movedPiece = LogicBoard[startX, startY].piece;
@@ -141,14 +148,16 @@ namespace ChessUI
             {
                 if (isUnderAttack(movedPiece, endX, endY)) return false;
             }
-
-            // check if the move checks friendly king
-            PieceLogic attacker = checkIfCheck(endX, endY, movedPiece, friendlyKing);
-            if (friendlyKing.isInCheck)
+            else
             {
-                friendlyKing.removeCheck(attacker); // remove checks if they were placed
-                return false;
+                // check if the move checks friendly king
+                if (checkIfCheck(endX, endY, movedPiece))
+                {
+                    addChecks(friendlyKing);
+                    return false;
+                }
             }
+            
 
             if (movedPiece.isMoveValid(this, startX, startY, endX, endY))
             {
@@ -206,7 +215,6 @@ namespace ChessUI
 
             }
 
-            // if it is not return false
             return false;
         }
 
@@ -220,7 +228,7 @@ namespace ChessUI
 
             //move pieces
             //kill pieces it is moving on
-            if (!(LogicBoard[endX, endY].piece is null))
+            if (LogicBoard[endX, endY].piece != null)
             { 
                 LogicBoard[endX, endY].piece.isKilled = true;
             }
@@ -252,7 +260,7 @@ namespace ChessUI
 
             //remove check (if other pieces are no longer checking friendly  king), and add new ones
             removeChecks(friendlyKing);
-            checkIfCheck(endX, endY, movedPiece, enemyKing);
+            addChecks(enemyKing);
 
             //flip turn and return
             whitesTurn = !whitesTurn;
@@ -270,14 +278,12 @@ namespace ChessUI
             {
                 // promote to a white queen
                 LogicBoard[x, y].piece = new QueenLogic(PieceColor.White, x, y);
-                checkIfCheck(x, y, LogicBoard[x, y].piece, blackKing);
 
             }
             else if (!(LogicBoard[x, y].piece.getIsWhite) && y == 0)
             {
                 // promote to a black queen
                 LogicBoard[x, y].piece = new QueenLogic(PieceColor.Black, x, y);
-                checkIfCheck(x, y, LogicBoard[x, y].piece, whiteKing);
             }
             return;
         }
@@ -358,206 +364,124 @@ namespace ChessUI
             return;
         }
 
-        /* rays: 
-         * 
-         * 
-         *      \  |  /
-         *       \ | /
-         *    -----P---------    
-         *       / | \
-         *      /  |  \
-         * 
-         *  diags are up 1 over 1 exactly
-         */
-        //check to see if the king is now under check.
-        private PieceLogic checkIfCheck(int endX, int endY, PieceLogic attacker, KingLogic king)
+        private void addChecks(KingLogic king)
         {
-            /* return PieceLogic for checking if move is valid. 
-             * if a move places a check on a friendly king then the move is invalid and not executed 
-             * BUT... This method places the king under check of that found piece
-             * SO... it needs to be returned so it can be removed as a piece checking. 
-             */
-            PieceLogic res = null;
             
-            //make sure pieces are valid
-            if(attacker == null) return res; 
-            if(king == null) return res;
-            //make sure the new location is a valid one
-            if(!(endX >= 0 && endX < 8 && endY >= 0 && endY < 8)) return res;
             
-            // if pieces are oppsite color and attacker can attack king
-            if((king.getIsWhite != attacker.getIsWhite) && isMoveLegal(endX, endY, king.col, king.row))
-            {
-                // add to the attack list and set 
-                king.nowChecking(attacker); // won't add if already in 
-                res = attacker;
-            }
+            //get enemy pieceset
+            PieceLogic[] pieces = king.getIsWhite ? blackPieces : whitePieces;
 
-            //Check the ray from the old location. See if it opened up an attack
-            int x = king.col; int y = king.row;
-            int deltaX = endX - x;
-            int deltaY = endY - y;
-            int xDir;
-            int yDir;
-            
-            // in not a striaght line or an attackable diagnoal then not attackable
-            if(!(deltaX == 0 || deltaY == 0) && !(Math.Abs(deltaX) == Math.Abs(deltaY)))
+            foreach (PieceLogic piece in pieces)
             {
-                return res;
-            }
-            // if no movement (promotion and castling cases)
-            if (deltaX == 0 && deltaY == 0 )
-            {
-                return res;
-            }
+                //skip dead pieces
+                if (piece.isKilled) continue;
 
-            //get direction it came from (the ray)
-            if (deltaX == 0) xDir = 0;
-            else xDir = deltaX > 0 ? 1 : -1;
-            if (deltaY == 0) yDir = 0;
-            else yDir = deltaY > 0 ? 1 : -1;
+                // location vars
+                int x = piece.row;
+                int y = piece.col;
 
-            // take a step away from the king
-            x += xDir;
-            y += yDir;
-
-            // travel along the ray until you hit the end of board or reach a piece
-            while (x < 8 && y < 8 && x > 0 && y > 0)
-            {
-                //if you hit a square that is filled
-                if (this.isSquareFilled(x, y))
+                if (isMoveLegal(x, y, king.row, king.col))// a legal move exist then the piece is under attack
                 {
-                    PieceLogic foundPiece = this.LogicBoard[x, y].piece;
-                    
-                    //if same color can't attack
-                    if (foundPiece.getIsWhite == king.getIsWhite) return res;
-
-                    // queen can attack on any ray
-                    if (foundPiece is QueenLogic)
-                    {
-                        king.nowChecking(foundPiece);
-                        res = foundPiece;                    
-                    }
-                    // if the ray is a straight line, needs to be a rook
-                    else if ((deltaX == 0 || deltaY == 0) && foundPiece is RookLogic)
-                    {
-                        king.nowChecking(foundPiece);
-                        res = foundPiece;                        
-                    }
-                    // else if the ray is a diag, needs to be a bishop
-                    else if((Math.Abs(deltaX) == Math.Abs(deltaY)) && foundPiece is BishopLogic)
-                    {
-                        king.nowChecking(foundPiece);
-                        res = foundPiece;                        
-                    }
-                    return res;
+                    king.nowChecking(piece);
                 }
 
-                // go further along the ray
-                x += xDir;
-                y += yDir;
+            }
+        }
+
+        //check to see if the move will cause friendly king to be under check.
+        private bool checkIfCheck(int endX, int endY, PieceLogic movedPiece)
+        {
+
+            //make sure pieces are valid
+            if(movedPiece == null) return true;
+            KingLogic king = movedPiece.getIsWhite ? whiteKing : blackKing;
+            //make sure the new location is a valid one
+            if (endX > 7 || endY > 7 || endX < 0 || endY < 0) return king.isInCheck;
+            
+            //get attackers and see if you take or are blocking
+
+            HashSet<PieceLogic> checkers = king.getCheckingPieces;
+
+            //loop through each piece and see if it can still attack
+            foreach (PieceLogic attacking in checkers)
+            {
+
+                int currX = attacking.row;
+                int currY = attacking.col;
+
+                if (currX == endX && currY == endY)
+                {
+                    king.removeCheck(attacking);
+                    continue;
+                }
+
+                // if one of these 3 see if you are blocking 
+                if (attacking is QueenLogic || attacking is RookLogic || attacking is BishopLogic)
+                {
+                    int kingX = king.col;
+                    int kingY = king.row;
+                    int deltaX = currX - kingX;
+                    int deltaY = currY - kingX; 
+                    int xDir;
+                    int yDir;
+
+                    // if no movement (promotion and castling cases)
+                    if (deltaX == 0 && deltaY == 0)
+                    {
+                        continue;
+                    }
+
+                    //get direction it came from (the ray)
+                    if (deltaX == 0) xDir = 0;
+                    else xDir = deltaX > 0 ? 1 : -1;
+                    if (deltaY == 0) yDir = 0;
+                    else yDir = deltaY > 0 ? 1 : -1;
+
+                    while(currX != kingX && currY != kingY)
+                    {
+                        if (currX > 7 || currY > 7 || currX < 0 || currY < 0) break;
+
+                        if(currX == endX && currY == endY)
+                        {
+                            king.removeCheck(attacking);
+                        }
+
+                        currX += xDir;
+                        currY += yDir;
+                    }
+                }
             }
 
-            return res;
+
+            return king.isInCheck;
         }
     
         // returns if a piece moves there will it be under attack by any piece
-        private bool isUnderAttack(PieceLogic piece, int startX, int startY)
+        private bool isUnderAttack(PieceLogic movedPiece, int endX, int endY)
         {
-            // location vars
-            int x = startX;
-            int y = startY;
+            //can't attack off board
+            if (endX > 7 || endY > 7 || endX < 0 || endY < 0) {  return false; }
+            
+            //get enemy pieceset
+            PieceLogic[] pieces = movedPiece.getIsWhite ? blackPieces: whitePieces;
 
-            if (x < 8 || y < 8 || x > 0 || y > 0) {  return true; }
-
-            //pawns first
-            /// pawns attack from... north for white, south for black
-            int pawnY = piece.getIsWhite ? 1 : -1;
-            /// check east and west
-            if(this.isSquareFilled(x + 1, y + pawnY))
+            foreach (PieceLogic piece in pieces)
             {
-                //if pawn and colors dont match then it is attacking
-                if (LogicBoard[x + 1, y + pawnY].piece is PawnLogic && (LogicBoard[x + 1, y + pawnY].piece.getIsWhite != piece.getIsWhite)) return true;
-            }
-            if (this.isSquareFilled(x + -1, y + pawnY))
-            {
-                if (LogicBoard[x + 1, y + pawnY].piece is PawnLogic && (LogicBoard[x + 1, y + pawnY].piece.getIsWhite != piece.getIsWhite)) return true;
-            }
+                //skip dead pieces
+                if (piece.isKilled) continue;
 
-            // go in each rays direction (n, ne, e, se, s, sw, w, nw)
-            int[] xDir = { 0, 1, 1, 1, 0, -1, -1, -1 };
-            int[] yDir = { 1, 1, 0, -1, -1, -1, 0, 1 };
+                // location vars
+                int x = piece.row;
+                int y = piece.col;
 
-            ///for each ray
-            for (int i = 0; i < 8; i++)
-            {
-                // reset x and y
-                x = startX + xDir[i];
-                y = startY + yDir[i];
-                
-                // travel along the ray until you hit the end of board or reach a piece
-                while (x < 8 && y < 8 && x > 0 && y > 0)
+                if (isMoveLegal(x, y, endX, endY))// a legal move exist then the piece is under attack
                 {
-                    //if you hit a square that is filled
-                    if (this.isSquareFilled(x, y))
-                    {
-                        PieceLogic foundPiece = this.LogicBoard[x, y].piece;
-
-                        //if same color can't attack
-                        if (foundPiece.getIsWhite == piece.getIsWhite) break;
-
-                        // queen can attack on any ray
-                        if (foundPiece is QueenLogic)
-                        {
-                            return true;
-                        }
-                        // if the ray is a straight line, needs to be a rook
-                        else if ((xDir[i] == 0 || yDir[i] == 0) && foundPiece is RookLogic)
-                        {
-                            return true;
-                        }
-                        // else if the ray is a diag, needs to be a bishop
-                        else if ((Math.Abs(xDir[i]) == Math.Abs(yDir[i])) && foundPiece is BishopLogic)
-                        {
-                            return true;
-                        }
-                        else if(foundPiece != piece) break; //if you hit the piece's current location you need to keep going along the ray, so if not don't
-                    }
-
-                    // go further along the ray
-                    x += xDir[i];
-                    y += yDir[i];
+                    return true;
                 }
+
             }
 
-            //do for king too but do not travel along ray
-            ///for each offest
-            for (int i = 0; i < 8; i++)
-            {
-                // set location
-                x = startX + xDir[i];
-                y = startY + yDir[i];
-                //if king and colors dont match then it is attacking
-                if (this.isSquareFilled(x, y))
-                    if (LogicBoard[x, y].piece is KingLogic && (LogicBoard[x, y].piece.getIsWhite != piece.getIsWhite)) return true;
-            }
-
-            // check positions knight can attack from 
-            /// Can only be attacked by a enemy knight from a position (P) that, if a knight (N) was at startX and startY, N could move to P legally on an empty board.
-            int[] xKnight = { 1, 2, 2, 1, -1, -2, -2, -1 };
-            int[] yKnight = { 2, 1, -1, -2, -2, -1, 1, 2 };
-            ///for each offest
-            for (int i = 0; i < 8; i++)
-            {
-                // set location
-                x = startX + xKnight[i];
-                y = startY + yKnight[i];
-                //if knight and colors dont match then it is attacking
-                if (this.isSquareFilled(x, y))
-                    if (LogicBoard[x, y].piece is KnightLogic && (LogicBoard[x, y].piece.getIsWhite != piece.getIsWhite)) return true;
-            }
-
-            // if get here no attackers
+            //get here no attackers
             return false;
         }
     
@@ -602,7 +526,7 @@ namespace ChessUI
 
         public PieceLogic getPieceAtLocation(int x, int y)
         {
-            if (x >= 0 && x < 8 && y >= 0 && y < 8) return null;
+            if (x < 0 || x > 7 || y < 0 || y > 7) return null;
             return LogicBoard[x, y].piece;
         }
     }
@@ -693,12 +617,12 @@ namespace ChessUI
 
         public override bool isMoveValid(BoardLogic glBoard, int startX, int startY, int endX, int endY)
         {
-            //ensure this pieceloc matches starting loc on the board it is trying to move on
+            /*ensure this pieceloc matches starting loc on the board it is trying to move on
             if (startX != this.col || startY != this.row)
             {
                 return false;
             }
-
+            */
             // if they start of end off the board it is not valid
             if (!IsValidPosition(startX, startY) || !IsValidPosition(endX, endY))
             {
@@ -730,11 +654,12 @@ namespace ChessUI
             else if (startY + (1 * signFlipper) == endY && startX + (1 * signFlipper) == endX)
             {
                 // must be filled and oppsite colors to move diag
-                if (glBoard.isSquareFilled(endX, endY))
+                PieceLogic piece = glBoard.getPieceAtLocation(endX, endY);
+                if(piece == null)
                 {
-                    PieceLogic piece = glBoard.getPieceAtLocation(endX, endY);
-                    return this.getIsWhite != piece.getIsWhite;
+                    return false;
                 }
+                return this.getIsWhite != piece.getIsWhite;
                 
             }
             
@@ -742,11 +667,12 @@ namespace ChessUI
             else if (startY + (1 * signFlipper) == endY && startX - (1 * signFlipper) == endX)
             {
                 // must be filled and oppsite colors to move diag
-                if (glBoard.isSquareFilled(endX, endY))
+                PieceLogic piece = glBoard.getPieceAtLocation(endX, endY);
+                if (piece == null)
                 {
-                    PieceLogic piece = glBoard.getPieceAtLocation(endX, endY);
-                    return this.getIsWhite != piece.getIsWhite;
+                    return false;
                 }
+                return this.getIsWhite != piece.getIsWhite;
             }
 
             // else not a valid move
@@ -840,6 +766,7 @@ namespace ChessUI
             else
             {
                  // 1 if right, -1 if left
+
                  int direction = (endX - startX) / Math.Abs(endX - startX);
                  // how long to loop
                  int deltaX = Math.Abs(endX - startX);
@@ -967,6 +894,10 @@ namespace ChessUI
             {
                 return false; // Not a diagonal move
             }
+            if(deltaX == 0 || deltaY == 0)
+            {
+                return false;
+            }
 
             // get the direction for the x and y in the form of 1 or -1
             int directionX = (endX - startX)/Math.Abs(endX - startX);
@@ -1047,6 +978,10 @@ namespace ChessUI
             /// if moving diagonally, check if obstructed
             if (deltaX == deltaY) 
             {
+                if (deltaX == 0 || deltaY == 0)
+                {
+                    return false;
+                }
                 // get the direction for the x and y in the form of 1 or -1
                 int directionX = (endX - startX) / Math.Abs(endX - startX);
                 int directionY = (endY - startY) / Math.Abs(endY - startY);
@@ -1232,11 +1167,9 @@ namespace ChessUI
             {
                 return true;
             }
-            // else moving 1 square
-            else
-            {
-                return false;
-            }
+            // else not moving 1 square
+            return false;
+            
         }
 
         public override int numLegalMoves(BoardLogic board)
