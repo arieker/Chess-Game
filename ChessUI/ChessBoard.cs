@@ -9,8 +9,9 @@ using System.Windows.Forms;
 public class ChessBoardForm : Form
 {
     private const int boardSize = 8;
-    private const int squareSize = 80;
-    private const int duration = 3;
+    private const int squareSize = 90;
+    // for timer in seconds
+    private const int duration = 60;
     public BoardLogic boardLogic;
     private readonly Piece[,] board = new Piece[boardSize, boardSize];
     private readonly Image[,] pieceImages = new Image[6, 2]; // 6 types of pieces x 2 colors
@@ -157,13 +158,12 @@ public class ChessBoardForm : Form
         if (whiteTime <= 0 || blackTime <= 0)
         {
             // Game over due to timeout
-            gameOver = true;
+           
             EndGame();
             // Handle game over condition
             if(whiteTime == 0)
             {
                 MessageBox.Show("Black Wins");
-
 
             }
             else
@@ -302,7 +302,6 @@ public class ChessBoardForm : Form
         if (!gameOver)
         {
             MessageBox.Show("Draw offered. Waiting for opponent's response.");
-            gameOver = true;
             // Implement logic to notify opponent about draw offer
         }
         else
@@ -314,13 +313,16 @@ public class ChessBoardForm : Form
 
     private void BtnForfeit_Click(object sender, EventArgs e)
     {
+        //need to keep track of what player clicked to forfeit
         MessageBox.Show("You forfeit the game. Your opponent wins.");
+        
         EndGame();
     }
 
     private void EndGame()
     {
         // Stop the game timer
+        gameOver = true;
         gameTimer.Stop();
 
         // Disable the mouse click event
@@ -355,7 +357,7 @@ public class ChessBoardForm : Form
 
         UpdateTimeDisplay(lblWhiteTime, duration); // Initial time for White player
 
-        lblWhiteTime.Location = new Point(squareSize * 8 + 10, squareSize * 7 + 10); // Adjust the location as needed
+        lblWhiteTime.Location = new Point(squareSize * 8 + 10, squareSize * 7 - 10); // Adjust the location as needed
         lblWhiteTime.AutoSize = true;
 
         Controls.Add(lblWhiteTime);
@@ -371,24 +373,30 @@ public class ChessBoardForm : Form
 
         UpdateTimeDisplay(lblBlackTime, duration); // Initial time for Black player
 
-        lblBlackTime.Location = new Point(squareSize * 8 + 10, 10); // Adjust the location as needed
+        lblBlackTime.Location = new Point(squareSize * 8 + 10 , squareSize - 10); // Adjust the location as needed
         lblBlackTime.AutoSize = true;
 
         Controls.Add(lblBlackTime);
 
-        // Initialize btnDraw
+
+        int buttonSize = 30;
+        // Initialize draw button
         btnDraw = new Button();
         btnDraw.Text = "Draw";
-        btnDraw.Location = new Point(squareSize * 8 + 10, squareSize * 6 + 10);
-        btnDraw.Size = new Size(100, 30);
+        btnDraw.Font = new Font(btnDraw.Font.FontFamily, 12);
+        btnDraw.BackColor = Color.DeepSkyBlue;
+        btnDraw.Location = new Point(squareSize * 8, squareSize * 3);
+        btnDraw.Size = new Size(squareSize, buttonSize);
         btnDraw.Click += BtnDraw_Click;
         Controls.Add(btnDraw);
 
-        // Initialize btnForfeit
+        // Initialize forfeit button
         btnForfeit = new Button();
         btnForfeit.Text = "Forfeit";
-        btnForfeit.Location = new Point(squareSize * 8 + 10, squareSize * 5 + 10);
-        btnForfeit.Size = new Size(100, 30);
+        btnForfeit.Font = new Font(btnForfeit.Font.FontFamily, 12);
+        btnForfeit.BackColor = Color.Red;
+        btnForfeit.Location = new Point(squareSize * 8, squareSize * 5 - buttonSize);
+        btnForfeit.Size = new Size(squareSize, buttonSize);
         btnForfeit.Click += BtnForfeit_Click;
         Controls.Add(btnForfeit);
 
