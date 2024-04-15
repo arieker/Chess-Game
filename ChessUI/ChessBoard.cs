@@ -10,6 +10,7 @@ public class ChessBoardForm : Form
 {
     private const int boardSize = 8;
     private const int squareSize = 80;
+    private const int duration = 3;
     public BoardLogic boardLogic;
     private readonly Piece[,] board = new Piece[boardSize, boardSize];
     private readonly Image[,] pieceImages = new Image[6, 2]; // 6 types of pieces x 2 colors
@@ -19,14 +20,17 @@ public class ChessBoardForm : Form
 
     private Timer gameTimer;
    
-
-    static private int duration = 60; // seconds
     
     private int whiteTime = duration; 
     private int blackTime = duration; 
 
     private Label lblWhiteTime;
     private Label lblBlackTime;
+
+    private Button btnDraw;
+    private Button btnForfeit;
+
+    private bool gameOver = false;
 
 
     public ChessBoardForm()
@@ -153,11 +157,14 @@ public class ChessBoardForm : Form
         if (whiteTime <= 0 || blackTime <= 0)
         {
             // Game over due to timeout
-            gameTimer.Stop();
+            gameOver = true;
+            EndGame();
             // Handle game over condition
-            if(whiteTime <= 0)
+            if(whiteTime == 0)
             {
                 MessageBox.Show("Black Wins");
+
+
             }
             else
             {
@@ -228,10 +235,11 @@ public class ChessBoardForm : Form
         int row = e.Y / squareSize;
         int col = e.X / squareSize;
     
+       
 
         if (selectedPiece == null)
         {
-            
+
             // If no piece is selected, check if there's a piece at the clicked position
             if (board[row, col] != null)
             {
@@ -245,10 +253,10 @@ public class ChessBoardForm : Form
         else
         {
             // If a piece is already selected, move the selected piece to the clicked position
-            
-            if (boardLogic.move(selectedSquare.X,7-selectedSquare.Y,col,7-row)) 
+
+            if (boardLogic.move(selectedSquare.X, 7 - selectedSquare.Y, col, 7 - row))
             {
-               
+
                 // Move the selected piece to the destination square
                 board[row, col] = selectedPiece;
                 board[selectedSquare.Y, selectedSquare.X] = null;
@@ -269,7 +277,7 @@ public class ChessBoardForm : Form
                 selectedPiece = null;
                 selectedSquare = Point.Empty;
 
-                
+
             }
             else
             {
@@ -278,6 +286,8 @@ public class ChessBoardForm : Form
                 selectedSquare = Point.Empty;
             }
         }
+        
+        
     }
 
     private void InvalidateCell(Point cell)
@@ -286,6 +296,40 @@ public class ChessBoardForm : Form
         Invalidate(cellRect);
     }
 
+
+    private void BtnDraw_Click(object sender, EventArgs e)
+    {
+        if (!gameOver)
+        {
+            MessageBox.Show("Draw offered. Waiting for opponent's response.");
+            gameOver = true;
+            // Implement logic to notify opponent about draw offer
+        }
+        else
+        {
+            MessageBox.Show("Draw accepted. Game ends in a draw.");
+            EndGame();
+        }
+    }
+
+    private void BtnForfeit_Click(object sender, EventArgs e)
+    {
+        MessageBox.Show("You forfeit the game. Your opponent wins.");
+        EndGame();
+    }
+
+    private void EndGame()
+    {
+        // Stop the game timer
+        gameTimer.Stop();
+
+        // Disable the mouse click event
+        this.MouseClick -= ChessBoardForm_MouseClick;
+
+        // Disable the draw and forfeit buttons
+        btnDraw.Enabled = false;
+        btnForfeit.Enabled = false;
+    }
 
     private void InitializeComponent()
     {
@@ -331,6 +375,24 @@ public class ChessBoardForm : Form
         lblBlackTime.AutoSize = true;
 
         Controls.Add(lblBlackTime);
+
+        // Initialize btnDraw
+        btnDraw = new Button();
+        btnDraw.Text = "Draw";
+        btnDraw.Location = new Point(squareSize * 8 + 10, squareSize * 6 + 10);
+        btnDraw.Size = new Size(100, 30);
+        btnDraw.Click += BtnDraw_Click;
+        Controls.Add(btnDraw);
+
+        // Initialize btnForfeit
+        btnForfeit = new Button();
+        btnForfeit.Text = "Forfeit";
+        btnForfeit.Location = new Point(squareSize * 8 + 10, squareSize * 5 + 10);
+        btnForfeit.Size = new Size(100, 30);
+        btnForfeit.Click += BtnForfeit_Click;
+        Controls.Add(btnForfeit);
+
+
 
     }
 }
