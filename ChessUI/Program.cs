@@ -13,6 +13,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using Org.BouncyCastle.Cms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Drawing;
 
 
 namespace ChessUI
@@ -178,7 +181,52 @@ namespace ChessUI
                     Console.WriteLine("Connection aborted");
                     return;
                 }
-                MessageBox.Show(System.Text.Encoding.ASCII.GetString(serverMsg, 0, size) + "(request received by " + Program.currentUser.getUsername() + ")");
+                ChessBoardForm chessboard_form = new ChessBoardForm();
+
+                string challengeUser = System.Text.Encoding.ASCII.GetString(serverMsg, 0, size);
+                if (challengeUser.Length >= 11 && challengeUser.Substring(0, 11) == "sendRequest")
+                {
+                    string[] inputs = challengeUser.Split(' ');
+                    DialogResult result = MessageBox.Show(inputs[1] + " would like to play a chess game with you. (request received by " + Program.currentUser.getUsername() + ")", "Game Request", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        int port = 31415;
+                        string ip = "127.0.0.1";
+                        Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                        IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+                        ClientSocket.Connect(ep);
+                        string request = "startGame " + Program.currentUser.getUsername() + " " + challengeUser.Substring(12);
+                        Console.Out.WriteLine(request);
+                        ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
+
+                        // open the game board
+
+                        chessboard_form.ShowDialog();
+
+                    }
+                    else if (result == DialogResult.No)
+                    {
+                        // make a game not happen
+                    }
+                }
+                if (challengeUser.Length >= 9 && challengeUser.Substring(0, 9) == "openBoard")
+                {
+
+                    chessboard_form.ShowDialog();
+                }
+                if (challengeUser.Length >= 4 && challengeUser.Substring(0,4) == "move")
+                {
+                    // this event means an enemy move happened. we see a "move" at the beginning, and the next 
+                    // four elements move an enemy piece on the board.
+                    string[] inputs = challengeUser.Split(' ');
+
+                    int x1 = Int32.Parse(inputs[1]);
+                    int y1 = Int32.Parse(inputs[2]);
+                    int x2 = Int32.Parse(inputs[3]);
+                    int y2 = Int32.Parse(inputs[4]);
+
+                    chessboard_form.boardLogic.move(x1, y1, x2, y2);
+                }
             }
         }
     }

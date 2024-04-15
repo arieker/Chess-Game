@@ -61,16 +61,50 @@ namespace ChessServer
                     Console.WriteLine("Request received.");
                     string[] inputs = username.Split(' ');
                     p.sendRequest(inputs[1], inputs[2]);
+                    continue;
+                }
+                if (username.Length >= 9 && username.Substring(0, 9) == "startGame")
+                {
+                    Console.WriteLine("Request received.");
+                    string[] inputs = username.Split(' ');
+                    p.startGame(inputs[1], inputs[2]);
+                    continue;
+                }
+                // this means a player moved, and sent that info to the server. what we should do here is send "move x1 y1 x2 y2" to the client that did NOT send it. 
+                if (username.Length >= 4 && username.Substring(0, 4) == "move")
+                {
+
                 }
                 else
                 {
-                    username = username.Replace("\0", "");
+
+                    username = username.Replace("\0", String.Empty);
+                    username = username.Replace("\n", String.Empty);
+                    username = username.Replace("\n", String.Empty);
+                    username = username.Replace("\r", String.Empty);
+                    username = username.Replace("\t", String.Empty);
+
                     Console.WriteLine(username + " connected");
                     UserSocket user = new UserSocket(username, ClientSocket);
                     connectionDict.Add(username, user);
                 }
             }
         }
+
+        public async void startGame(string player1, string player2)
+        {
+            Console.Out.WriteLine("Starting game between " + player1 + " " + player2);
+            string p1 = player1.Replace("\0", String.Empty);
+            string p2 = player2.Replace("\0", String.Empty);
+
+            Socket s1 = connectionDict[p1].getSocket();
+            Socket s2 = connectionDict[p2].getSocket();
+
+            // opens sender console
+            string command = "openBoard";
+            s2.Send(System.Text.Encoding.ASCII.GetBytes(command), 0, command.Length, SocketFlags.None);
+        }
+
         void sendRequest(string receiverUsername, string senderUsername)
         {
             string receiveUser = receiverUsername.Replace("\0", "");
@@ -78,7 +112,7 @@ namespace ChessServer
 
             Socket s = connectionDict[receiveUser].getSocket();
 
-            string msg = (sendUser + " would like to play a chess game with you.");
+            string msg = ("sendRequest " + sendUser);
             s.Send(System.Text.Encoding.ASCII.GetBytes(msg), 0, msg.Length, SocketFlags.None);
         }
         public async Task checkConnections()
@@ -95,7 +129,6 @@ namespace ChessServer
 
                         client.Blocking = false;
                         client.Send(tmp, 0, 0);
-                        Console.WriteLine(s.getUsername() + " Connected!");
                     }
                     catch (SocketException e)
                     {
