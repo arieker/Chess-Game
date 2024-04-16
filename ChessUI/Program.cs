@@ -158,7 +158,6 @@ namespace ChessUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
-
             awaitThread.Abort();
             if (currentSocket != null)
             {
@@ -225,7 +224,8 @@ namespace ChessUI
                     int x2 = Int32.Parse(inputs[3]);
                     int y2 = Int32.Parse(inputs[4]);
 
-                    chessboard_form.boardLogic.move(x1, y1, x2, y2);
+                    chessboard_form.boardLogic.move(y1, 7 - x1, y2, 7 - x2);
+                    chessboard_form.movePiece_visual(x1, y1, x2, y2);
                 }
             }
         }

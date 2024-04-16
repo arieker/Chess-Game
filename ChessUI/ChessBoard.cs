@@ -239,6 +239,35 @@ public class ChessBoardForm : Form
     private Piece selectedPiece = null;
     private Point selectedSquare = Point.Empty;
 
+    public void movePiece_visual(int x1, int y1, int x2, int y2) 
+    {
+        selectedPiece = board[x1, y1];
+        selectedSquare = new Point(y2, x2);
+        int row = x1;
+        int col = y1;
+
+        // Move the selected piece to the destination square
+        board[x2, y2] = selectedPiece;
+        board[x1,y1] = null;
+
+        InvalidateCell(prevMoveStartSquare);
+        InvalidateCell(prevMoveEndSquare);
+
+        // Record the previous move
+        prevMoveStartSquare = selectedSquare;
+        prevMoveEndSquare = new Point(col, row);
+
+        // Invalidate the starting cell, the destination cell, and the previous move cells
+        InvalidateCell(selectedSquare);
+        InvalidateCell(new Point(col, row));
+
+
+        // Reset selected piece and square
+        selectedPiece = null;
+        selectedSquare = Point.Empty;
+
+    }
+    
     private void ChessBoardForm_MouseClick(object sender, MouseEventArgs e)
     {
         int row = e.Y / squareSize;
