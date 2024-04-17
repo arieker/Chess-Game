@@ -371,6 +371,14 @@ public class ChessBoardForm : Form
         //need to keep track of what player clicked to forfeit
         MessageBox.Show("You forfeit the game. Your opponent wins.");
         
+        int port = 31415;
+        string ip = "127.0.0.1";
+        Socket cs = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+        cs.Connect(ep);
+        string request = "end " + Program.currentUser.getUsername();
+        cs.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
+
         EndGame();
     }
 

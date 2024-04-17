@@ -308,16 +308,22 @@ namespace ChessUI
                 }
                
                     if (challengeUser.Length >= 3 && challengeUser.Substring(0, 3) == "end")
-                {
+                    {
+                        string[] inputs = challengeUser.Split(' ');
+                        string loser = inputs[1];
+                    loser = loser.Replace("\0", String.Empty);
 
                     chessboard_form.gameTimer.Stop();
-                    MessageBox.Show(chessboard_form.boardLogic.winner() + " Wins!");
-                    chessboard_form.Close();
+                    if (chessboard_form.boardLogic.winner() == Winner.NoneYet)
+                    {
+                        MessageBox.Show(loser + " Forfeits");
+                    }
+                    else
+                    {
+                        MessageBox.Show(chessboard_form.boardLogic.winner() + " Wins!");
+                    }
 
                     string update = chessboard_form.boardLogic.getAllMoves();
-                    string[] inputs = challengeUser.Split(' ');
-                    string loser = inputs[1];
-                    loser = loser.Replace("\0", String.Empty);
                     // this account lost
                     if (loser == Program.currentUser.getUsername()) 
                     {
