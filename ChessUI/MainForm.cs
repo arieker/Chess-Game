@@ -42,7 +42,7 @@ namespace ChessUI
                 loginToolStripMenuItem.Visible = false; // Login Invisible
                 registerToolStripMenuItem.Visible = false; // Register Invisible
                 findMatchToolStripMenuItem.Visible = true; // Play Online Visible
-                viewLastPlayedGameToolStripMenuItem.Visible = false; // View Last Played Game Invisible
+                viewLastPlayedGameToolStripMenuItem.Visible = true; // View Last Played Game Visible
                 editOrViewProfileToolStripMenuItem.Visible = true; // Edit/View Profile Visible
                 logoutToolStripMenuItem.Visible = true; // Logout Visible
             }
@@ -64,7 +64,7 @@ namespace ChessUI
                 loginToolStripMenuItem.Visible = false; // Login Invisible
                 registerToolStripMenuItem.Visible = false; // Register Invisible
                 findMatchToolStripMenuItem.Visible = true; // Play Online Visible
-                viewLastPlayedGameToolStripMenuItem.Visible = true; // View Last Played Game Invisible
+                viewLastPlayedGameToolStripMenuItem.Visible = true; // View Last Played Game Visible
                 editOrViewProfileToolStripMenuItem.Visible = true; // Edit/View Profile Visible
                 logoutToolStripMenuItem.Visible = true; // Logout Visible
             }
