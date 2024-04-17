@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System.Configuration;
 using MySqlX.XDevAPI;
+using System.Media;
 
 
 namespace ChessServer
@@ -40,6 +41,8 @@ namespace ChessServer
         static int port = 31415;
         static String ip = "127.0.0.1";
         static Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        static string player1 = "";
+        static string player2 = "";
 
         static IPEndPoint ep = new IPEndPoint(IPAddress.Any, port);
         static void Main(String[] args)
@@ -68,18 +71,26 @@ namespace ChessServer
                 {
                     Console.WriteLine("Request received.");
                     string[] inputs = username.Split(' ');
-
+                  
                     p.startGame(inputs[1], inputs[2]);
                     continue;
                 }
-                // this means a player moved, and sent that info to the server. what we should do here is send "move x1 y1 x2 y2" to the client that did NOT send it. 
                 if (username.Length >= 4 && username.Substring(0, 4) == "move")
                 {
                     // this event means an enemy move happened. we see a "move" at the beginning, and the next 
                     // four elements move an enemy piece on the board.
+                    Console.WriteLine(username);
                     string[] inputs = username.Split(' ');
 
                     string user = inputs[1];
+                    if (user == player1)
+                    {
+                        user = player2;
+                    }
+                    else
+                    {
+                        user = player1;
+                    }
                     user = user.Replace("\0", String.Empty);
 
                     int x1 = Int32.Parse(inputs[2]);
@@ -91,6 +102,7 @@ namespace ChessServer
 
                     string cmd = "move " + x1 + " " + y1 + " " + x2 + " " + y2;
                     socket.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                    continue;
                 }
                 else
                 {
@@ -110,6 +122,9 @@ namespace ChessServer
 
         public void startGame(string player1, string player2)
         {
+            Program.player1 = player1;
+            Program.player2 = player2;
+
             Console.Out.WriteLine("Starting game between " + player1 + " " + player2);
             string p1 = player1.Replace("\0", String.Empty);
             string p2 = player2.Replace("\0", String.Empty);

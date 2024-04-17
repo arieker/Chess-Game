@@ -310,23 +310,21 @@ public class ChessBoardForm : Form
                 prevMoveStartSquare = selectedSquare;
                 prevMoveEndSquare = new Point(col, row);
 
-                int port = 31415;
-                string ip = "127.0.0.1";
-                Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
-                ClientSocket.Connect(ep);
-                string request = "move " + Program.currentUser.getUsername() + " " + y1 + " " + x1 + " " + row + " " + col;
-                ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
 
                 // Invalidate the starting cell, the destination cell, and the previous move cells
                 InvalidateCell(selectedSquare);
                 InvalidateCell(new Point(col, row));
 
-                var check = board[row, col];
                 selectedPiece = null;
                 selectedSquare = Point.Empty;
 
-
+                int port = 31415;
+                string ip = "127.0.0.1";
+                Socket cs = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+                cs.Connect(ep);
+                string request = "move " + Program.currentUser.getUsername() + " " + y1 + " " + x1 + " " + row + " " + col;
+                cs.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
             }
             else
             {
