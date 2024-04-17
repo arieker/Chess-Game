@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using System.Xml.Linq;
 
 namespace ChessUI
 {
@@ -48,6 +49,7 @@ namespace ChessUI
      * 
      */
 
+
     public class BoardLogic
     {
         // 2d array of the spotsto represent the board for the logic
@@ -60,6 +62,9 @@ namespace ChessUI
         private PieceLogic[] blackPieces = new PieceLogic[16];
         
         public bool whitesTurn = true;
+
+        public String moves = "";  
+
 
         //initalize the board and put the pieces in their correct starting spot
         public BoardLogic() 
@@ -273,6 +278,8 @@ namespace ChessUI
             //flip turn and return
             //Console.WriteLine("Black King: " + blackKing.isInCheck);
             //Console.WriteLine("White King: " + whiteKing.isInCheck);
+            addMove(endX, endY);
+            Console.WriteLine(moves);
             whitesTurn = !whitesTurn;
             return true;
         }
@@ -363,10 +370,10 @@ namespace ChessUI
             if (king == null) return;
 
             //get attackers
-            HashSet<PieceLogic> checkers = king.getCheckingPieces;
-            
+            List<PieceLogic> checkers = king.getCheckingPieces.ToList<PieceLogic>();
+
             //loop through each piece and see if it can still attack
-            foreach(PieceLogic attacker in checkers)
+            foreach (PieceLogic attacker in checkers)
             {
                 //if a move to the king is no longer legal then remove it as a checking piece
                 if (!attacker.isMoveValid(this, attacker.col, attacker.row, king.col, king.row)) king.removeCheck(attacker);
@@ -615,6 +622,67 @@ namespace ChessUI
             if (x < 0 || x > 7 || y < 0 || y > 7) return null;
             return LogicBoard[x, y].piece;
         }
+
+        private void addMove(int x, int y)
+        {
+            if (x < 0 || x > 7 || y < 0 || y > 7) return;
+            PieceLogic piece = getPieceAtLocation(x, y);
+            if (piece == null) return;
+
+            String newMove = "";
+            //add piece type
+            newMove += pieceTypeToLetter(piece);
+            //add column/x val as a char a to h
+            char mappedChar = (char)('a' + x);
+            newMove += mappedChar.ToString();
+            //add row/y as a number as a string
+            newMove += x.ToString();
+
+            newMove += ", ";
+
+            moves += newMove;
+
+            return;
+
+        }
+
+        public String pieceTypeToLetter(PieceLogic piece)
+        {
+            if(piece is null)
+            {
+                return "";
+            }
+            else if(piece is KingLogic)
+            {
+                return "K";
+            }
+            else if (piece is QueenLogic)
+            {
+                return "Q";
+            }
+            else if (piece is BishopLogic)
+            {
+                return "B";
+            }
+            else if (piece is KnightLogic)
+            {
+                return "N";
+            }
+            else if (piece is RookLogic)
+            {
+                return "R";
+            }
+            else
+            {
+                return "P"; //pawn, techinally supposed to be "". 
+            }
+        }
+    
+        public String getAllMoves()
+        {
+            moves += "#";
+            return moves;
+        }
     }
 
     public abstract class PieceLogic
@@ -693,7 +761,8 @@ namespace ChessUI
         {
             return x >= 0 && x < 8 && y >= 0 && y < 8;
         }
-        
+
+
     }
 
     public class PawnLogic : PieceLogic
