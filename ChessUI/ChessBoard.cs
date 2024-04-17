@@ -390,24 +390,24 @@ public class ChessBoardForm : Form
 
     private void InitializeComponent()
     {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.theirTimeLabelLabel = new System.Windows.Forms.Label();
-            this.yourTimeLabelLabel = new System.Windows.Forms.Label();
-            this.theirTimerLabel = new System.Windows.Forms.Label();
-            this.yourTimerLabel = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // ChessBoardForm
-            // 
-            this.AccessibleDescription = "";
-            this.AccessibleName = "";
-            this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(624, 601);
-            this.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Name = "ChessBoardForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.ResumeLayout(false);
+        this.groupBox1 = new System.Windows.Forms.GroupBox();
+        this.theirTimeLabelLabel = new System.Windows.Forms.Label();
+        this.yourTimeLabelLabel = new System.Windows.Forms.Label();
+        this.theirTimerLabel = new System.Windows.Forms.Label();
+        this.yourTimerLabel = new System.Windows.Forms.Label();
+        this.groupBox1.SuspendLayout();
+        this.SuspendLayout();
+        // 
+        // ChessBoardForm
+        // 
+        this.AccessibleDescription = "";
+        this.AccessibleName = "";
+        this.BackColor = System.Drawing.SystemColors.ControlLight;
+        this.ClientSize = new System.Drawing.Size(624, 601);
+        this.ForeColor = System.Drawing.SystemColors.ControlText;
+        this.Name = "ChessBoardForm";
+        this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+        this.ResumeLayout(false);
         this.SuspendLayout();
         // 
         // ChessBoardForm

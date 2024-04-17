@@ -36,12 +36,14 @@
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findMatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewLastPlayedGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // openBoardButton
             // 
-            this.openBoardButton.Location = new System.Drawing.Point(177, 268);
+            this.openBoardButton.Location = new System.Drawing.Point(96, 206);
             this.openBoardButton.Name = "openBoardButton";
             this.openBoardButton.Size = new System.Drawing.Size(226, 23);
             this.openBoardButton.TabIndex = 1;
@@ -54,6 +56,7 @@
             this.accountToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.loginToolStripMenuItem,
             this.registerToolStripMenuItem,
+            this.viewLastPlayedGameToolStripMenuItem,
             this.editOrViewProfileToolStripMenuItem,
             this.logoutToolStripMenuItem});
             this.accountToolStripMenuItem.Name = "accountToolStripMenuItem";
@@ -102,18 +105,34 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.accountToolStripMenuItem,
-            this.findMatchToolStripMenuItem});
+            this.findMatchToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(584, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(334, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            // 
+            // viewLastPlayedGameToolStripMenuItem
+            // 
+            this.viewLastPlayedGameToolStripMenuItem.Name = "viewLastPlayedGameToolStripMenuItem";
+            this.viewLastPlayedGameToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.viewLastPlayedGameToolStripMenuItem.Text = "View Last Played Game";
+            this.viewLastPlayedGameToolStripMenuItem.Visible = false;
+            this.viewLastPlayedGameToolStripMenuItem.Click += new System.EventHandler(this.viewLastPlayedGameToolStripMenuItem_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 561);
+            this.ClientSize = new System.Drawing.Size(334, 241);
             this.Controls.Add(this.openBoardButton);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -136,6 +155,8 @@
         private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findMatchToolStripMenuItem;
         private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewLastPlayedGameToolStripMenuItem;
     }
 }
 

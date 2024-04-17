@@ -41,6 +41,7 @@ namespace ChessUI
                 loginToolStripMenuItem.Visible = false; // Login Invisible
                 registerToolStripMenuItem.Visible = false; // Register Invisible
                 findMatchToolStripMenuItem.Visible = true; // Play Online Visible
+                viewLastPlayedGameToolStripMenuItem.Visible = false; // View Last Played Game Invisible
                 editOrViewProfileToolStripMenuItem.Visible = true; // Edit/View Profile Visible
                 logoutToolStripMenuItem.Visible = true; // Logout Visible
             }
@@ -62,6 +63,7 @@ namespace ChessUI
                 loginToolStripMenuItem.Visible = false; // Login Invisible
                 registerToolStripMenuItem.Visible = false; // Register Invisible
                 findMatchToolStripMenuItem.Visible = true; // Play Online Visible
+                viewLastPlayedGameToolStripMenuItem.Visible = true; // View Last Played Game Invisible
                 editOrViewProfileToolStripMenuItem.Visible = true; // Edit/View Profile Visible
                 logoutToolStripMenuItem.Visible = true; // Logout Visible
             }
@@ -106,6 +108,7 @@ namespace ChessUI
             loginToolStripMenuItem.Visible = true; // Login Visible
             registerToolStripMenuItem.Visible = true; // Register Visible
             findMatchToolStripMenuItem.Visible = false; // Play Online Invisible
+            viewLastPlayedGameToolStripMenuItem.Visible = false; // View Last Played Game Invisible
             editOrViewProfileToolStripMenuItem.Visible = false; // Edit/View Profile Invisible
             logoutToolStripMenuItem.Visible = false; // Logout Invisible
         }
@@ -116,6 +119,16 @@ namespace ChessUI
             ChessBoardForm chessboard_form = new ChessBoardForm();
 
             chessboard_form.ShowDialog();
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.wikihow.com/Play-Chess");
+        }
+
+        private void viewLastPlayedGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // for nick
         }
     }
 }
