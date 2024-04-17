@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -129,6 +130,25 @@ namespace ChessUI
         private void viewLastPlayedGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // for nick
+        }
+
+        private void MainForm_Paint(object sender, PaintEventArgs e)
+        {
+            Image kingblack = Image.FromFile(@"../../Assets\king_black.png");
+            Image queenblack = Image.FromFile(@"../../Assets\queen_black.png");
+            Image kingwhite = Image.FromFile(@"../../Assets\king_white.png");
+            Image queenwhite = Image.FromFile(@"../../Assets\queen_white.png");
+            Graphics g = e.Graphics;
+            Brush blueBrush = Brushes.CornflowerBlue;
+            Brush whiteBrush = Brushes.GhostWhite;
+            g.FillRectangle(blueBrush, 0, 20, 200, 200);
+            g.FillRectangle(whiteBrush, 0, 220, 200, 200);
+            g.FillRectangle(whiteBrush, 200, 20, 200, 200);
+            g.FillRectangle(blueBrush, 200, 220, 200, 200);
+            g.DrawImage(kingblack, new Rectangle(0, 20, 200, 200));
+            g.DrawImage(queenwhite, new Rectangle(0, 220, 200, 200));
+            g.DrawImage(queenblack, new Rectangle(200, 20, 200, 200));
+            g.DrawImage(kingwhite, new Rectangle(200, 220, 200, 200));
         }
     }
 }

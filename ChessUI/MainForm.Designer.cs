@@ -32,12 +32,12 @@
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.registerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewLastPlayedGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editOrViewProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findMatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewLastPlayedGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -66,21 +66,29 @@
             // loginToolStripMenuItem
             // 
             this.loginToolStripMenuItem.Name = "loginToolStripMenuItem";
-            this.loginToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.loginToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.loginToolStripMenuItem.Text = "Login";
             this.loginToolStripMenuItem.Click += new System.EventHandler(this.loginToolStripMenuItem_Click);
             // 
             // registerToolStripMenuItem
             // 
             this.registerToolStripMenuItem.Name = "registerToolStripMenuItem";
-            this.registerToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.registerToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.registerToolStripMenuItem.Text = "Register";
             this.registerToolStripMenuItem.Click += new System.EventHandler(this.registerToolStripMenuItem_Click);
+            // 
+            // viewLastPlayedGameToolStripMenuItem
+            // 
+            this.viewLastPlayedGameToolStripMenuItem.Name = "viewLastPlayedGameToolStripMenuItem";
+            this.viewLastPlayedGameToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.viewLastPlayedGameToolStripMenuItem.Text = "View Last Played Game";
+            this.viewLastPlayedGameToolStripMenuItem.Visible = false;
+            this.viewLastPlayedGameToolStripMenuItem.Click += new System.EventHandler(this.viewLastPlayedGameToolStripMenuItem_Click);
             // 
             // editOrViewProfileToolStripMenuItem
             // 
             this.editOrViewProfileToolStripMenuItem.Name = "editOrViewProfileToolStripMenuItem";
-            this.editOrViewProfileToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.editOrViewProfileToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.editOrViewProfileToolStripMenuItem.Text = "Edit/View Profile";
             this.editOrViewProfileToolStripMenuItem.Visible = false;
             this.editOrViewProfileToolStripMenuItem.Click += new System.EventHandler(this.editOrViewProfileToolStripMenuItem_Click);
@@ -88,7 +96,7 @@
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.logoutToolStripMenuItem.Text = "Logout";
             this.logoutToolStripMenuItem.Visible = false;
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
@@ -109,7 +117,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(334, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(400, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -120,25 +128,18 @@
             this.helpToolStripMenuItem.Text = "Help";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
-            // viewLastPlayedGameToolStripMenuItem
-            // 
-            this.viewLastPlayedGameToolStripMenuItem.Name = "viewLastPlayedGameToolStripMenuItem";
-            this.viewLastPlayedGameToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
-            this.viewLastPlayedGameToolStripMenuItem.Text = "View Last Played Game";
-            this.viewLastPlayedGameToolStripMenuItem.Visible = false;
-            this.viewLastPlayedGameToolStripMenuItem.Click += new System.EventHandler(this.viewLastPlayedGameToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(334, 241);
+            this.ClientSize = new System.Drawing.Size(400, 420);
             this.Controls.Add(this.openBoardButton);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Chess!";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.MainForm_Paint);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
