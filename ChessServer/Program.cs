@@ -106,7 +106,92 @@ namespace ChessServer
                     socket.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
                     continue;
                 }
-                if (username.Length >= 3 && username.Substring(0, 3) == "end")
+                if (username.Length >= 4 && username.Substring(0, 4) == "draw" && username != "drawAccept")
+                {
+                    string[] inputs = username.Split(' ');
+                    string user = username;
+
+                    if (user == player1)
+                    {
+                        user = player2;
+                    }
+                    else
+                    {
+                        user = player1;
+                    }
+
+                    user = user.Replace("\0", String.Empty);
+
+                    Socket socket = connectionDict[user].getSocket();
+
+                    string cmd = "draw";
+                    socket.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                    continue;
+                }
+                if (username.Length >= 10 && username.Substring(0, 10) == "drawAccept")
+                {
+                    int draws = 0;
+                    if (!gameEnded)
+                    {
+                        gameEnded = true;
+                        try
+                        {
+                            MySqlConnection con;
+
+                            using (con = new MySqlConnection())
+                            {
+                                con.ConnectionString = ConfigurationManager.ConnectionStrings["users"].ConnectionString;
+                                try
+                                {
+                                    con.Open();
+                                }
+                                catch
+                                {
+                                    return;
+                                }
+                                MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + player1 + "'", con);
+                                MySqlDataReader dr = command.ExecuteReader();
+                                if (dr.Read())
+                                {
+                                    draws = Int32.Parse(dr[5].ToString());
+
+                                }
+                                dr.Close();
+                                MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `draws` = '" + (draws + 1) + "' WHERE (`username` = '" + player1 + "');", con);
+                                MySqlDataReader dr2 = onlinecommand.ExecuteReader();
+
+                                draws = 0;
+                                MySqlCommand command2 = new MySqlCommand("SELECT * FROM users WHERE username = '" + player2 + "'", con);
+                                MySqlDataReader dr3 = command2.ExecuteReader();
+                                if (dr3.Read())
+                                {
+                                    draws = Int32.Parse(dr3[5].ToString());
+
+                                }
+                                dr3.Close();
+                                MySqlCommand onlinecommand2 = new MySqlCommand("UPDATE `login`.`users` SET `draws` = '" + (draws + 1) + "' WHERE (`username` = '" + player2 + "');", con);
+                                MySqlDataReader dr4 = onlinecommand2.ExecuteReader();
+                                con.Close();
+                            }
+                        }
+                        catch (MySqlException er)
+                        {
+                            Console.WriteLine(er.ToString());
+                        }
+                        player1 = player1.Replace("\0", String.Empty);
+                        player2 = player2.Replace("\0", String.Empty);
+
+                        Socket s1 = connectionDict[player1].getSocket();
+                        Socket s2 = connectionDict[player2].getSocket();
+
+                        // this sends the losing user
+                        String cmd = "drawEnd";
+                        s1.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                        s2.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                    }
+                   
+                }
+                    if (username.Length >= 3 && username.Substring(0, 3) == "end")
                 {
                     if (!gameEnded)
                     {
@@ -222,6 +307,90 @@ namespace ChessServer
                     }
 
                     gameEnded = true;
+                }
+                if (username.Length >= 4 && username.Substring(0, 4) == "draw" && username != "drawAccept")
+                {
+                    string user = username;
+
+                    if (user == player1)
+                    {
+                        user = player2;
+                    }
+                    else
+                    {
+                        user = player1;
+                    }
+
+                    user = user.Replace("\0", String.Empty);
+
+                    Socket socket = connectionDict[user].getSocket();
+
+                    string cmd = "draw";
+                    socket.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+
+                }
+                if (username.Length >= 10 && username.Substring(0, 10) == "drawAccept")
+                {
+                    if (!gameEnded)
+                    {
+                        gameEnded = true;
+                        int draws = 0;
+                        try
+                        {
+                            MySqlConnection con;
+
+                            using (con = new MySqlConnection())
+                            {
+                                con.ConnectionString = ConfigurationManager.ConnectionStrings["users"].ConnectionString;
+                                try
+                                {
+                                    con.Open();
+                                }
+                                catch
+                                {
+                                    return;
+                                }
+                                MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + player1 + "'", con);
+                                MySqlDataReader dr = command.ExecuteReader();
+                                if (dr.Read())
+                                {
+                                    draws = Int32.Parse(dr[5].ToString());
+
+                                }
+                                dr.Close();
+                                MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `draws` = '" + (draws + 1) + "' WHERE (`username` = '" + player1 + "');", con);
+                                MySqlDataReader dr2 = onlinecommand.ExecuteReader();
+                                dr2.Close();
+                                draws = 0;
+                                MySqlCommand command2 = new MySqlCommand("SELECT * FROM users WHERE username = '" + player2 + "'", con);
+                                MySqlDataReader dr3 = command2.ExecuteReader();
+                                if (dr3.Read())
+                                {
+                                    draws = Int32.Parse(dr3[5].ToString());
+
+                                }
+                                dr3.Close();
+                                MySqlCommand onlinecommand2 = new MySqlCommand("UPDATE `login`.`users` SET `draws` = '" + (draws + 1) + "' WHERE (`username` = '" + player2 + "');", con);
+                                MySqlDataReader dr4 = onlinecommand2.ExecuteReader();
+                                con.Close();
+                            }
+                        }
+                        catch (MySqlException er)
+                        {
+                            Console.WriteLine(er.ToString());
+                        }
+                        player1 = player1.Replace("\0", String.Empty);
+                        player2 = player2.Replace("\0", String.Empty);
+
+                        Socket s1 = connectionDict[player1].getSocket();
+                        Socket s2 = connectionDict[player2].getSocket();
+
+                        // this sends the losing user
+                        String cmd = "drawEnd";
+                        s1.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                        s2.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                    }
+                    
                 }
             }
         }

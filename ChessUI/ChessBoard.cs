@@ -27,7 +27,7 @@ public class ChessBoardForm : Form
     private Point prevMoveStartSquare = Point.Empty;
     private Point prevMoveEndSquare = Point.Empty;
 
-    private Timer gameTimer;
+    public Timer gameTimer;
    
     
     private int whiteTime = duration; 
@@ -349,7 +349,15 @@ public class ChessBoardForm : Form
         if (!gameOver)
         {
             MessageBox.Show("Draw offered. Waiting for opponent's response.");
-            // Implement logic to notify opponent about draw offer
+
+            int port = 31415;
+            string ip = "127.0.0.1";
+            Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+            ClientSocket.Connect(ep);
+            string request = "draw " + Program.currentUser.getUsername();
+            Console.Out.WriteLine(request);
+            ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
         }
         else
         {
