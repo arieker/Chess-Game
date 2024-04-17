@@ -249,6 +249,38 @@ namespace ChessUI
                     chessboard_form.movePiece_visual(x1, y1, x2, y2);
                     chessboard_form.boardLogic.move(y1, 7 - x1, y2, 7 - x2);
                 }
+                if (challengeUser.Length >= 3 && challengeUser.Substring(0, 4) == "end")
+                {
+                    string update = chessboard_form.boardLogic.getAllMoves();
+
+                    //updates string to database
+                    try
+                    {
+                        MySqlConnection con;
+
+                        using (con = new MySqlConnection())
+                        {
+                            con.ConnectionString = ConfigurationManager.ConnectionStrings["users"].ConnectionString;
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch
+                            {
+                                return;
+                            }
+                            MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `recent` = '" + update + "' WHERE (`username` = '" + Program.currentUser.getUsername() + "');", con);
+                            MySqlDataReader dr2 = onlinecommand.ExecuteReader();
+                            con.Close();
+                        }
+                    }
+                    catch (SqlException er)
+                    {
+                        Console.WriteLine(er.ToString());
+                    }
+
+
+                }
             }
         }
     }
