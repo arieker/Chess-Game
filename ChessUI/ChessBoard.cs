@@ -319,7 +319,7 @@ public class ChessBoardForm : Form
                 selectedSquare = Point.Empty;
 
                 int port = 31415;
-                string ip = "127.0.0.1";
+                string ip = "44.221.170.210";
                 Socket cs = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
                 cs.Connect(ep);
@@ -351,7 +351,7 @@ public class ChessBoardForm : Form
             MessageBox.Show("Draw offered. Waiting for opponent's response.");
 
             int port = 31415;
-            string ip = "127.0.0.1";
+            string ip = "44.221.170.210";
             Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
             ClientSocket.Connect(ep);
@@ -372,7 +372,7 @@ public class ChessBoardForm : Form
         MessageBox.Show("You forfeit the game. Your opponent wins.");
         
         int port = 31415;
-        string ip = "127.0.0.1";
+        string ip = "44.221.170.210";
         Socket cs = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
         cs.Connect(ep);
