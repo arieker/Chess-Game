@@ -3,7 +3,10 @@ using System;
 using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
+using System.Net.Sockets;
+using System.Net;
 using System.Windows.Forms;
+using ZstdSharp.Unsafe;
 
 
 public class ChessBoardForm : Form
@@ -239,6 +242,33 @@ public class ChessBoardForm : Form
     private Piece selectedPiece = null;
     private Point selectedSquare = Point.Empty;
 
+    public void movePiece_visual(int x1, int y1, int x2, int y2) 
+    {
+        string currentUserforValidation = Program.currentUser.getUsername();
+        selectedPiece = board[x1, y1];
+        selectedSquare = new Point(y2, x2);
+        int row = x1;
+        int col = y1;
+
+        // Move the selected piece to the destination square
+        board[x2, y2] = selectedPiece;
+        board[x1,y1] = null;
+
+        InvalidateCell(prevMoveStartSquare);
+        InvalidateCell(prevMoveEndSquare);
+
+        // Record the previous move
+        prevMoveStartSquare = selectedSquare;
+        prevMoveEndSquare = new Point(col, row);
+
+        // Invalidate the starting cell, the destination cell, and the previous move cells
+        InvalidateCell(selectedSquare);
+        InvalidateCell(new Point(col, row));
+
+        selectedPiece = null;
+        selectedSquare = Point.Empty;
+    }
+    
     private void ChessBoardForm_MouseClick(object sender, MouseEventArgs e)
     {
         int row = e.Y / squareSize;
@@ -266,8 +296,11 @@ public class ChessBoardForm : Form
             if (boardLogic.move(selectedSquare.X, 7 - selectedSquare.Y, col, 7 - row))
             {
 
+                string usernameforvalidation = Program.currentUser.getUsername();
                 // Move the selected piece to the destination square
                 board[row, col] = selectedPiece;
+                int x1 = selectedSquare.X; 
+                int y1 = selectedSquare.Y;
                 board[selectedSquare.Y, selectedSquare.X] = null;
 
                 InvalidateCell(prevMoveStartSquare);
@@ -277,16 +310,21 @@ public class ChessBoardForm : Form
                 prevMoveStartSquare = selectedSquare;
                 prevMoveEndSquare = new Point(col, row);
 
+
                 // Invalidate the starting cell, the destination cell, and the previous move cells
                 InvalidateCell(selectedSquare);
                 InvalidateCell(new Point(col, row));
 
-
-                // Reset selected piece and square
                 selectedPiece = null;
                 selectedSquare = Point.Empty;
 
-
+                int port = 31415;
+                string ip = "127.0.0.1";
+                Socket cs = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+                cs.Connect(ep);
+                string request = "move " + Program.currentUser.getUsername() + " " + y1 + " " + x1 + " " + row + " " + col;
+                cs.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
             }
             else
             {
