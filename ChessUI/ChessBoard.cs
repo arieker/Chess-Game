@@ -324,7 +324,7 @@ public class ChessBoardForm : Form
                 IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
                 cs.Connect(ep);
                 string request = "move " + Program.currentUser.getUsername() + " " + y1 + " " + x1 + " " + row + " " + col;
-                cs.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);4
+                cs.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
             }
             else
             {

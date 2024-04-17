@@ -10,6 +10,7 @@ using MySql.Data.MySqlClient;
 using System.Configuration;
 using MySqlX.XDevAPI;
 using System.Media;
+using Org.BouncyCastle.Bcpg;
 
 
 namespace ChessServer
@@ -43,6 +44,7 @@ namespace ChessServer
         static Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         static string player1 = "";
         static string player2 = "";
+        static bool gameEnded = false;
 
         static IPEndPoint ep = new IPEndPoint(IPAddress.Any, port);
         static void Main(String[] args)
@@ -102,6 +104,27 @@ namespace ChessServer
 
                     string cmd = "move " + x1 + " " + y1 + " " + x2 + " " + y2;
                     socket.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                    continue;
+                }
+                if (username.Length >= 3 && username.Substring(0, 3) == "end")
+                {
+                    if (!gameEnded)
+                    {
+                        gameEnded = true;
+                        string[] inputs = username.Split(' ');
+                        string user = inputs[1];
+
+                        player1 = player1.Replace("\0", String.Empty);
+                        player2 = player2.Replace("\0", String.Empty);
+
+                        Socket s1 = connectionDict[player1].getSocket();
+                        Socket s2 = connectionDict[player2].getSocket();
+
+                        // this sends the losing user
+                        String cmd = "end " + user;
+                        s1.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                        s2.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                    }
                     continue;
                 }
                 else
@@ -180,6 +203,25 @@ namespace ChessServer
 
                     string cmd = "move " + x1 + " " + y1 + " " + x2 + " " + y2;
                     socket.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                }
+                if (username.Length >= 3 && username.Substring(0, 3) == "end")
+                {
+                    if (!gameEnded)
+                    {
+                        gameEnded = true;
+                        string[] inputs = username.Split(' ');
+                        string user = inputs[1];
+
+                        Socket s1 = connectionDict[p1].getSocket();
+                        Socket s2 = connectionDict[p2].getSocket();
+
+                        // this sends the losing user
+                        String cmd = "end " + user;
+                        s1.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                        s2.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                    }
+
+                    gameEnded = true;
                 }
             }
         }
