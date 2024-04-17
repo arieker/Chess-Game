@@ -59,7 +59,7 @@ namespace ChessUI
         private PieceLogic[] whitePieces = new PieceLogic[16];
         private PieceLogic[] blackPieces = new PieceLogic[16];
         
-        public bool whitesTurn;
+        public bool whitesTurn = true;
 
         //initalize the board and put the pieces in their correct starting spot
         public BoardLogic() 

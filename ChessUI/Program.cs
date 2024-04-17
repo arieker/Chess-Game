@@ -148,6 +148,8 @@ namespace ChessUI
         public static User currentUser = new User("Guest", "Guest", 0, 0, 0, DateTime.Today.ToString(), "Online");
         public static Socket currentSocket = null;
         public static Thread awaitThread = new Thread(new ThreadStart(() => Program.Await()));
+        public static Thread gameThread = new Thread(new ThreadStart(() => Program.doGame()));
+        public static ChessBoardForm chessboard_form;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -157,6 +159,7 @@ namespace ChessUI
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            chessboard_form = new ChessBoardForm();
             Application.Run(new MainForm());
             awaitThread.Abort();
             if (currentSocket != null)
@@ -180,7 +183,6 @@ namespace ChessUI
                     Console.WriteLine("Connection aborted");
                     return;
                 }
-                ChessBoardForm chessboard_form = new ChessBoardForm();
 
                 string challengeUser = System.Text.Encoding.ASCII.GetString(serverMsg, 0, size);
                 if (challengeUser.Length >= 11 && challengeUser.Substring(0, 11) == "sendRequest")
@@ -199,7 +201,7 @@ namespace ChessUI
                         ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
 
                         // open the game board
-
+                        gameThread.Start();
                         chessboard_form.ShowDialog();
 
                     }
@@ -210,10 +212,30 @@ namespace ChessUI
                 }
                 if (challengeUser.Length >= 9 && challengeUser.Substring(0, 9) == "openBoard")
                 {
-
+                    gameThread.Start();
                     chessboard_form.ShowDialog();
                 }
-                if (challengeUser.Length >= 4 && challengeUser.Substring(0,4) == "move")
+            }
+        }
+
+        public static void doGame()
+        {
+            while (true)
+            {
+                int size = 0;
+                byte[] serverMsg = new byte[1024];
+                try
+                {
+                    size = Program.currentSocket.Receive(serverMsg);
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine("Connection aborted");
+                    return;
+                }
+
+                string challengeUser = System.Text.Encoding.ASCII.GetString(serverMsg, 0, size);
+                if (challengeUser.Length >= 4 && challengeUser.Substring(0, 4) == "move")
                 {
                     // this event means an enemy move happened. we see a "move" at the beginning, and the next 
                     // four elements move an enemy piece on the board.
@@ -224,8 +246,8 @@ namespace ChessUI
                     int x2 = Int32.Parse(inputs[3]);
                     int y2 = Int32.Parse(inputs[4]);
 
-                    chessboard_form.boardLogic.move(y1, 7 - x1, y2, 7 - x2);
                     chessboard_form.movePiece_visual(x1, y1, x2, y2);
+                    chessboard_form.boardLogic.move(y1, 7 - x1, y2, 7 - x2);
                 }
             }
         }

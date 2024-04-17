@@ -37,15 +37,16 @@ namespace ChessServer
     class Program
     {
         static Dictionary<string, UserSocket> connectionDict = new Dictionary<string, UserSocket>();
+        static int port = 31415;
+        static String ip = "127.0.0.1";
+        static Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+        static IPEndPoint ep = new IPEndPoint(IPAddress.Any, port);
         static void Main(String[] args)
         {
             Program p = new Program();
             p.checkConnections();
-            int port = 31415;
-            String ip  = "127.0.0.1";
-            Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            IPEndPoint ep = new IPEndPoint(IPAddress.Any, port);
             listener.Bind(ep);
             listener.Listen(100);
             Console.WriteLine("ChessServer is listening");
@@ -67,13 +68,29 @@ namespace ChessServer
                 {
                     Console.WriteLine("Request received.");
                     string[] inputs = username.Split(' ');
+
                     p.startGame(inputs[1], inputs[2]);
                     continue;
                 }
                 // this means a player moved, and sent that info to the server. what we should do here is send "move x1 y1 x2 y2" to the client that did NOT send it. 
                 if (username.Length >= 4 && username.Substring(0, 4) == "move")
                 {
+                    // this event means an enemy move happened. we see a "move" at the beginning, and the next 
+                    // four elements move an enemy piece on the board.
+                    string[] inputs = username.Split(' ');
 
+                    string user = inputs[1];
+                    user = user.Replace("\0", String.Empty);
+
+                    int x1 = Int32.Parse(inputs[2]);
+                    int y1 = Int32.Parse(inputs[3]);
+                    int x2 = Int32.Parse(inputs[4]);
+                    int y2 = Int32.Parse(inputs[5]);
+
+                    Socket socket = connectionDict[user].getSocket();
+
+                    string cmd = "move " + x1 + " " + y1 + " " + x2 + " " + y2;
+                    socket.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
                 }
                 else
                 {
@@ -91,7 +108,7 @@ namespace ChessServer
             }
         }
 
-        public async void startGame(string player1, string player2)
+        public void startGame(string player1, string player2)
         {
             Console.Out.WriteLine("Starting game between " + player1 + " " + player2);
             string p1 = player1.Replace("\0", String.Empty);
@@ -103,6 +120,53 @@ namespace ChessServer
             // opens sender console
             string command = "openBoard";
             s2.Send(System.Text.Encoding.ASCII.GetBytes(command), 0, command.Length, SocketFlags.None);
+
+            Thread gameThread = new Thread(new ThreadStart(() => Program.gameLoop(p1, p2)));
+            gameThread.Start();
+        }
+        
+
+        public static void gameLoop(string p1, string p2)
+        {
+
+            // counts how many clients are connected
+            while (true)
+            {
+                Socket ClientSocket = listener.Accept();
+                byte[] msg = new byte[1024];
+                ClientSocket.Receive(msg);
+                string username = Encoding.UTF8.GetString(msg);
+
+                // this means a player moved, and sent that info to the server. what we should do here is send "move x1 y1 x2 y2" to the client that did NOT send it. 
+                if (username.Length >= 4 && username.Substring(0, 4) == "move")
+                {
+                    // this event means an enemy move happened. we see a "move" at the beginning, and the next 
+                    // four elements move an enemy piece on the board.
+                    Console.WriteLine(username);
+                    string[] inputs = username.Split(' ');
+
+                    string user = inputs[1];
+                    if (user == p1)
+                    {
+                        user = p2;
+                    }
+                    else
+                    {
+                        user = p1;
+                    }
+                    user = user.Replace("\0", String.Empty);
+
+                    int x1 = Int32.Parse(inputs[2]);
+                    int y1 = Int32.Parse(inputs[3]);
+                    int x2 = Int32.Parse(inputs[4]);
+                    int y2 = Int32.Parse(inputs[5]);
+
+                    Socket socket = connectionDict[user].getSocket();
+
+                    string cmd = "move " + x1 + " " + y1 + " " + x2 + " " + y2;
+                    socket.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
+                }
+            }
         }
 
         void sendRequest(string receiverUsername, string senderUsername)
