@@ -62,6 +62,7 @@ namespace ChessUI
         private PieceLogic[] blackPieces = new PieceLogic[16];
         
         public bool whitesTurn = true;
+        private bool isTheGameOver = false;
 
         public String moves = "";  
 
@@ -227,6 +228,7 @@ namespace ChessUI
         public bool move(int startX, int startY, int endX, int endY)
         {
             if (!isMoveLegal(startX, startY, endX, endY)) return false;
+            if (isTheGameOver) return false;
 
             PieceLogic movedPiece = LogicBoard[startX, startY].piece;
             KingLogic friendlyKing = whitesTurn ? whiteKing : blackKing;
@@ -241,7 +243,7 @@ namespace ChessUI
                 {
                     LogicBoard[endX, endY].piece.isKilled = true;
                 }
-
+                winner();
             }
             LogicBoard[endX, endY].piece = movedPiece;
             movedPiece.col = endX;
@@ -683,6 +685,23 @@ namespace ChessUI
             moves += "#";
             return moves;
         }
+
+        public Winner winner()
+        {
+            if (!whiteKing.isKilled && !blackKing.isKilled) return Winner.NoneYet;
+            else if (whiteKing.isKilled)
+            {
+                isTheGameOver = true;
+                return Winner.Black;
+            }
+            else if (blackKing.isKilled) 
+            {
+                isTheGameOver = true;
+                return Winner.White;
+            }
+
+            return Winner.NoneYet;
+        }
     }
 
     public abstract class PieceLogic
@@ -866,6 +885,8 @@ namespace ChessUI
 
             return res;
         }
+    
+
     }
 
     public class RookLogic : PieceLogic 
@@ -1354,5 +1375,12 @@ namespace ChessUI
         NotOver,
         CheckMate,
         StaleMate
+    }
+
+    public enum Winner
+    {
+        White,
+        Black,
+        NoneYet
     }
 }
