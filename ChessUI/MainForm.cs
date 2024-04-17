@@ -8,9 +8,12 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 // PLEASE READ
 // Try to name all forms like so MainForm, LoginForm, ChessBoardForm
@@ -129,7 +132,43 @@ namespace ChessUI
 
         private void viewLastPlayedGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // for nick
+            try
+            {
+                string gameString = "";
+                MySqlConnection con;
+
+                using (con = new MySqlConnection())
+                {
+                    // I'm assuming this entire code will be rewritten in the future so just keep this in mind:
+
+                    // If username is unique, then take whatever password, and register the user as a new account
+                    // If username is not unique say an account already exists, password is invalid.
+                    // In a dream world, you can tell the user that the username is unique as they type it like a real website. If this is possible that'd be cool :) but this form is your baby, I won't touch it too much
+                    // p.s. make sure u limit the length of usernames to something respectable and don't let them use characters that might cause issues like 漢字 even tho they prob wont cause issues
+                    con.ConnectionString = ConfigurationManager.ConnectionStrings["users"].ConnectionString;
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch
+                    {
+
+                    }
+
+                    MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + Program.currentUser.getUsername() + "'", con);
+                    MySqlDataReader dr = command.ExecuteReader();
+                    if (dr.Read())
+                    {
+                        gameString = dr[8].ToString();
+                    }
+                    con.Close();
+                    MessageBox.Show(gameString, "Most Recent Game: ");
+                }
+            }
+            catch (SqlException er)
+            {
+                Console.WriteLine(er.ToString());
+            }
         }
 
         private void MainForm_Paint(object sender, PaintEventArgs e)
