@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.openBoardButton = new System.Windows.Forms.Button();
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.registerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,16 +39,6 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // openBoardButton
-            // 
-            this.openBoardButton.Location = new System.Drawing.Point(96, 206);
-            this.openBoardButton.Name = "openBoardButton";
-            this.openBoardButton.Size = new System.Drawing.Size(226, 23);
-            this.openBoardButton.TabIndex = 1;
-            this.openBoardButton.Text = "Open Chess Board UI (For testing)";
-            this.openBoardButton.UseVisualStyleBackColor = true;
-            this.openBoardButton.Click += new System.EventHandler(this.openBoardButton_Click);
             // 
             // accountToolStripMenuItem
             // 
@@ -133,7 +122,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(400, 420);
-            this.Controls.Add(this.openBoardButton);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
@@ -148,7 +136,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button openBoardButton;
         private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loginToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem registerToolStripMenuItem;
