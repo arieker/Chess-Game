@@ -55,7 +55,7 @@ public class ChessBoardForm : Form
     private void LoadPieceImages()
     {
         // Relative directory path where the images are located
-        string directoryPath = @"../../Assets";
+        string directoryPath = @"Assets";
 
         // Load images for each piece and color
         for (PieceColor color = PieceColor.White; color <= PieceColor.Black; color++)
