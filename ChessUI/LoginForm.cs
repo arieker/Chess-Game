@@ -84,7 +84,7 @@ namespace ChessUI
                         dr.Close();
                         //establish connection to server
                         int port = 31415;
-                        string ip = "127.0.0.1";
+                        string ip = "44.221.170.210";
                         Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
                         ClientSocket.Connect(ep);
@@ -99,8 +99,10 @@ namespace ChessUI
                         Console.Out.WriteLine("Logged in Successfully");
                         con.Close();
 
-                        
-                        Program.awaitThread.Start();
+                        if (Program.awaitThread.ThreadState != ThreadState.Running)
+                        {
+                            Program.awaitThread.Start();
+                        }
                         return true;
                     }
                     else

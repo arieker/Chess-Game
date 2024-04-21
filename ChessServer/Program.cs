@@ -45,6 +45,7 @@ namespace ChessServer
         static string player1 = "";
         static string player2 = "";
         static bool gameEnded = false;
+        static Thread gameThread;
 
         static IPEndPoint ep = new IPEndPoint(IPAddress.Any, port);
         static void Main(String[] args)
@@ -147,7 +148,7 @@ namespace ChessServer
                                 }
                                 catch
                                 {
-                                    return;
+
                                 }
                                 MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + player1 + "'", con);
                                 MySqlDataReader dr = command.ExecuteReader();
@@ -193,8 +194,6 @@ namespace ChessServer
                 }
                     if (username.Length >= 3 && username.Substring(0, 3) == "end")
                 {
-                    if (!gameEnded)
-                    {
                         gameEnded = true;
                         string[] inputs = username.Split(' ');
                         string user = inputs[1];
@@ -209,7 +208,6 @@ namespace ChessServer
                         String cmd = "end " + user;
                         s1.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
                         s2.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
-                    }
                     continue;
                 }
                 else
@@ -223,7 +221,14 @@ namespace ChessServer
 
                     Console.WriteLine(username + " connected");
                     UserSocket user = new UserSocket(username, ClientSocket);
-                    connectionDict.Add(username, user);
+                    try
+                    {
+                        connectionDict.Add(username, user);
+                    }
+                    catch
+                    {
+
+                    }
                 }
             }
         }
@@ -244,7 +249,7 @@ namespace ChessServer
             string command = "openBoard";
             s2.Send(System.Text.Encoding.ASCII.GetBytes(command), 0, command.Length, SocketFlags.None);
 
-            Thread gameThread = new Thread(new ThreadStart(() => Program.gameLoop(p1, p2)));
+            gameThread = new Thread(new ThreadStart(() => Program.gameLoop(p1, p2)));
             gameThread.Start();
         }
         
@@ -289,10 +294,29 @@ namespace ChessServer
                     string cmd = "move " + x1 + " " + y1 + " " + x2 + " " + y2;
                     socket.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
                 }
+                if (username.Length >= 9 && username.Substring(0, 9) == "startGame")
+                {
+                    Console.WriteLine("Request received.");
+                    string[] inputs = username.Split(' ');
+
+                    Program.player1 = player1;
+                    Program.player2 = player2;
+
+                    Console.Out.WriteLine("Starting game between " + player1 + " " + player2);
+                    string play1 = player1.Replace("\0", String.Empty);
+                    string play2 = player2.Replace("\0", String.Empty);
+
+                    Socket s1 = connectionDict[play1].getSocket();
+                    Socket s2 = connectionDict[play2].getSocket();
+
+                    // opens sender console
+                    string command = "openBoard";
+                    s2.Send(System.Text.Encoding.ASCII.GetBytes(command), 0, command.Length, SocketFlags.None);
+
+                    continue;
+                }
                 if (username.Length >= 3 && username.Substring(0, 3) == "end")
                 {
-                    if (!gameEnded)
-                    {
                         gameEnded = true;
                         string[] inputs = username.Split(' ');
                         string user = inputs[1];
@@ -304,9 +328,10 @@ namespace ChessServer
                         String cmd = "end " + user;
                         s1.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
                         s2.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
-                    }
 
                     gameEnded = true;
+                    
+
                 }
                 if (username.Length >= 4 && username.Substring(0, 4) == "draw" && username != "drawAccept")
                 {
@@ -331,8 +356,7 @@ namespace ChessServer
                 }
                 if (username.Length >= 10 && username.Substring(0, 10) == "drawAccept")
                 {
-                    if (!gameEnded)
-                    {
+
                         gameEnded = true;
                         int draws = 0;
                         try
@@ -348,7 +372,7 @@ namespace ChessServer
                                 }
                                 catch
                                 {
-                                    return;
+
                                 }
                                 MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + player1 + "'", con);
                                 MySqlDataReader dr = command.ExecuteReader();
@@ -391,7 +415,7 @@ namespace ChessServer
                         s2.Send(System.Text.Encoding.ASCII.GetBytes(cmd), 0, cmd.Length, SocketFlags.None);
                     }
                     
-                }
+     
             }
         }
 
@@ -443,11 +467,11 @@ namespace ChessServer
                                     }
                                     catch
                                     {
-                                        return;
-                                    }
-                                    MySqlCommand command = new MySqlCommand("UPDATE `login`.`users` SET `status` = 'Offline' WHERE(`username` = '" + s.getUsername + "');", con);
-                                    command.ExecuteReader();
 
+                                    }
+                                    MySqlCommand command = new MySqlCommand("UPDATE `login`.`users` SET `status` = 'Offline' WHERE(`username` = '" + s.getUsername() + "');", con);
+                                    command.ExecuteReader();
+                                    connectionDict.Remove(s.getUsername());
                                     con.Close();
                                 }
                             }

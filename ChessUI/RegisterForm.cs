@@ -78,7 +78,7 @@ namespace ChessUI
                     else
                     {
                         dr.Close();
-                        MySqlCommand insertcommand = new MySqlCommand("INSERT INTO `login`.`users` (`username`, `password`, `nickname`, `wins`, `losses`, `draws`, `opendate`, `status`) VALUES ('" + username + "', '" + password.GetHashCode() + "', '', '0', '0', '0', '" + DateTime.Now.Date.ToString("dd/MM/yyyy") + "', 'Offline');", con);
+                        MySqlCommand insertcommand = new MySqlCommand("INSERT INTO `login`.`users` (`username`, `password`, `nickname`, `wins`, `losses`, `draws`, `opendate`, `status`) VALUES ('" + username + "', '" + password.GetHashCode() + "', '" + nicknameTextBox.Text + "', '0', '0', '0', '" + DateTime.Now.Date.ToString("dd/MM/yyyy") + "', 'Offline');", con);
                         MySqlDataReader dr2 = insertcommand.ExecuteReader();
                         MessageBox.Show("Account successfully created.");
                         this.Close();

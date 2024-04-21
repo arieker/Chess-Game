@@ -55,7 +55,7 @@ public class ChessBoardForm : Form
     private void LoadPieceImages()
     {
         // Relative directory path where the images are located
-        string directoryPath = @"../../Assets";
+        string directoryPath = @"Assets";
 
         // Load images for each piece and color
         for (PieceColor color = PieceColor.White; color <= PieceColor.Black; color++)
@@ -175,12 +175,29 @@ public class ChessBoardForm : Form
             // Handle game over condition
             if(whiteTime == 0)
             {
-                MessageBox.Show("Black Wins");
+                int port = 31415;
+                string ip = "44.221.170.210";
+                Socket cs = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+                cs.Connect(ep);
+                string request = "end " + Program.currentUser.getUsername();
+                cs.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
 
+                MessageBox.Show("Black Wins");
+                EndGame();
             }
             else
             {
-                MessageBox.Show("White Wins");
+                int port = 31415;
+                string ip = "44.221.170.210";
+                Socket cs = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+                cs.Connect(ep);
+                string request = "end " + Program.currentUser.getUsername();
+                cs.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
+
+                MessageBox.Show("Black Wins");
+                EndGame();
             }
         }
     }
@@ -319,7 +336,7 @@ public class ChessBoardForm : Form
                 selectedSquare = Point.Empty;
 
                 int port = 31415;
-                string ip = "127.0.0.1";
+                string ip = "44.221.170.210";
                 Socket cs = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
                 cs.Connect(ep);
@@ -351,7 +368,7 @@ public class ChessBoardForm : Form
             MessageBox.Show("Draw offered. Waiting for opponent's response.");
 
             int port = 31415;
-            string ip = "127.0.0.1";
+            string ip = "44.221.170.210";
             Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
             ClientSocket.Connect(ep);
@@ -372,7 +389,7 @@ public class ChessBoardForm : Form
         MessageBox.Show("You forfeit the game. Your opponent wins.");
         
         int port = 31415;
-        string ip = "127.0.0.1";
+        string ip = "44.221.170.210";
         Socket cs = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
         cs.Connect(ep);

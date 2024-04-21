@@ -207,7 +207,7 @@ namespace ChessUI
                     if (result == DialogResult.Yes)
                     {
                         int port = 31415;
-                        string ip = "127.0.0.1";
+                        string ip = "44.221.170.210";
                         Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
                         ClientSocket.Connect(ep);
@@ -216,6 +216,8 @@ namespace ChessUI
                         ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
 
                         // open the game board
+                        chessboard_form = new ChessBoardForm();
+                        gameThread = new Thread(new ThreadStart(() => Program.doGame()));
                         gameThread.Start();
                         chessboard_form.ShowDialog();
 
@@ -227,6 +229,8 @@ namespace ChessUI
                 }
                 if (challengeUser.Length >= 9 && challengeUser.Substring(0, 9) == "openBoard")
                 {
+                    chessboard_form = new ChessBoardForm();
+                    gameThread = new Thread(new ThreadStart(() => Program.doGame()));
                     gameThread.Start();
                     chessboard_form.ShowDialog();
                 }
@@ -238,7 +242,6 @@ namespace ChessUI
             bool gameOver = false;
             while (true)
             {
-                
                 int size = 0;
                 byte[] serverMsg = new byte[1024];
                 try
@@ -252,6 +255,32 @@ namespace ChessUI
                 }
 
                 string challengeUser = System.Text.Encoding.ASCII.GetString(serverMsg, 0, size);
+                if (challengeUser.Length >= 11 && challengeUser.Substring(0, 11) == "sendRequest")
+                {
+                    string[] inputs = challengeUser.Split(' ');
+                    DialogResult result = MessageBox.Show(inputs[1] + " would like to play a chess game with you. (request received by " + Program.currentUser.getUsername() + ")", "Game Request", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        int port = 31415;
+                        string ip = "44.221.170.210";
+                        Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                        IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
+                        ClientSocket.Connect(ep);
+                        string request = "startGame " + Program.currentUser.getUsername() + " " + challengeUser.Substring(12);
+                        Console.Out.WriteLine(request);
+                        ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
+
+                        // open the game board
+                        chessboard_form = new ChessBoardForm();
+
+                        chessboard_form.ShowDialog();
+
+                    }
+                    else if (result == DialogResult.No)
+                    {
+                        // make a game not happen
+                    }
+                }
                 if (challengeUser.Length >= 4 && challengeUser.Substring(0, 4) == "move")
                 {
                     // this event means an enemy move happened. we see a "move" at the beginning, and the next 
@@ -273,7 +302,7 @@ namespace ChessUI
                         // this means that this player lost
 
                         int port = 31415;
-                        string ip = "127.0.0.1";
+                        string ip = "44.221.170.210";
                         Socket cs = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
                         cs.Connect(ep);
@@ -281,10 +310,39 @@ namespace ChessUI
                         cs.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
                     }
                 }
+                if (challengeUser.Length >= 9 && challengeUser.Substring(0, 9) == "openBoard")
+                {
+                    chessboard_form = new ChessBoardForm();
+                    chessboard_form.ShowDialog();
+                }
                 if (challengeUser.Length >= 7 && challengeUser.Substring(0, 7) == "drawEnd")
                 {
                     MessageBox.Show("Draw Accepted. Ending Game");
-                    break;
+                    try
+                    {
+                        string update = chessboard_form.boardLogic.getAllMoves();
+                        MySqlConnection con;
+
+                        using (con = new MySqlConnection())
+                        {
+                            con.ConnectionString = ConfigurationManager.ConnectionStrings["users"].ConnectionString;
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch
+                            {
+                                return;
+                            }
+                            MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `recent` = '" + update + "' WHERE (`username` = '" + Program.currentUser.getUsername() + "');", con);
+                            MySqlDataReader dr2 = onlinecommand.ExecuteReader();
+                            con.Close();
+                        }
+                    }
+                    catch (SqlException er)
+                    {
+                        Console.WriteLine(er.ToString());
+                    }
                 }
                 if (challengeUser.Length >= 4 && challengeUser.Substring(0, 4) == "draw" && challengeUser != "drawAccept" && challengeUser != "drawEnd")
                 {
@@ -292,18 +350,45 @@ namespace ChessUI
                     if (result == DialogResult.Yes)
                     {
                         int port = 31415;
-                        string ip = "127.0.0.1";
+                        string ip = "44.221.170.210";
                         Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
                         ClientSocket.Connect(ep);
                         string request = "drawAccept " + Program.currentUser.getUsername();
                         Program.currentUser.addDraw();
                         ClientSocket.Send(System.Text.Encoding.ASCII.GetBytes(request), 0, request.Length, SocketFlags.None);
+                        try
+                        {
+                            string update = chessboard_form.boardLogic.getAllMoves();
+                            MySqlConnection con;
+
+                            using (con = new MySqlConnection())
+                            {
+                                con.ConnectionString = ConfigurationManager.ConnectionStrings["users"].ConnectionString;
+                                try
+                                {
+                                    con.Open();
+                                }
+                                catch
+                                {
+                                    return;
+                                }
+                                MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `recent` = '" + update + "' WHERE (`username` = '" + Program.currentUser.getUsername() + "');", con);
+                                MySqlDataReader dr2 = onlinecommand.ExecuteReader();
+                                con.Close();
+                            }
+                        }
+                        catch (SqlException er)
+                        {
+                            Console.WriteLine(er.ToString());
+                        }
                     }
                     else if (result == DialogResult.No)
                     {
                         
                     }
+                    
+                    //gameThread.Abort();
                     break;
                 }
                
@@ -311,22 +396,23 @@ namespace ChessUI
                     {
                         string[] inputs = challengeUser.Split(' ');
                         string loser = inputs[1];
-                    loser = loser.Replace("\0", String.Empty);
+                        loser = loser.Replace("\0", String.Empty);
 
-                    chessboard_form.gameTimer.Stop();
-                    if (chessboard_form.boardLogic.winner() == Winner.NoneYet)
-                    {
-                        MessageBox.Show(loser + " Forfeits");
-                    }
-                    else
-                    {
-                        MessageBox.Show(chessboard_form.boardLogic.winner() + " Wins!");
-                    }
+                        chessboard_form.gameTimer.Stop();
+                        if (chessboard_form.boardLogic.winner() == Winner.NoneYet)
+                        {
+                            MessageBox.Show(loser + " Forfeits");
+                        }
+                        else
+                        {
+                             MessageBox.Show(chessboard_form.boardLogic.winner() + " Wins!");
+                        }
 
                     string update = chessboard_form.boardLogic.getAllMoves();
                     // this account lost
                     if (loser == Program.currentUser.getUsername()) 
                     {
+                        int losses = 0;
                         try
                         {
                             MySqlConnection con;
@@ -345,7 +431,23 @@ namespace ChessUI
                                 if (!gameOver)
                                 {
                                     gameOver = true;
-                                    MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `losses` = '" + (Program.currentUser.getLosses() + 1) + "' WHERE (`username` = '" + inputs[1] + "');", con);
+                                    MySqlDataAdapter da = new MySqlDataAdapter(new MySqlCommand("SELECT COUNT(*) FROM users WHERE username='" + Program.currentUser.getUsername() + "'", con));
+                                    DataTable loginTable = new DataTable();
+                                    da.Fill(loginTable);
+
+                                    if (loginTable.Rows[0][0].ToString() == "1")
+                                    {
+
+                                        // set currentuser static variable
+                                        MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + loser + "'", con);
+                                        MySqlDataReader dr = command.ExecuteReader();
+                                        if (dr.Read())
+                                        {
+                                            losses = Int32.Parse(dr[4].ToString());
+                                        }
+                                        dr.Close();
+                                    }
+                                    MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `losses` = '" + (losses+1) + "' WHERE (`username` = '" + Program.currentUser.getUsername() + "');", con);
                                     Program.currentUser.addLoss();
                                     MySqlDataReader dr2 = onlinecommand.ExecuteReader();
                                 }
@@ -374,9 +476,9 @@ namespace ChessUI
                                 }
                                 catch
                                 {
-                                    return;
+     
                                 }
-                                MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + inputs[1] + "'", con);
+                                MySqlCommand command = new MySqlCommand("SELECT * FROM users WHERE username = '" + Program.currentUser.getUsername() + "'", con);
                                 MySqlDataReader dr = command.ExecuteReader();
                                 if (dr.Read())
                                 {
@@ -385,7 +487,6 @@ namespace ChessUI
                                 }
                                 dr.Close();
                                 MySqlCommand onlinecommand = new MySqlCommand("UPDATE `login`.`users` SET `wins` = '" + (wins + 1) + "' WHERE (`username` = '" + Program.currentUser.getUsername() + "');", con);
-                                Program.currentUser.addWin();
                                 MySqlDataReader dr2 = onlinecommand.ExecuteReader();
                                 con.Close();
                             }
@@ -420,7 +521,7 @@ namespace ChessUI
                     {
                         Console.WriteLine(er.ToString());
                     }
-
+                    //gameThread.Abort();
                 }
             }
         }
