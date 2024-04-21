@@ -207,7 +207,7 @@ namespace ChessUI
                     if (result == DialogResult.Yes)
                     {
                         int port = 31415;
-                        string ip = "44.221.170.210";
+                        string ip = "127.0.0.1";
                         Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
                         ClientSocket.Connect(ep);
@@ -273,7 +273,7 @@ namespace ChessUI
                         // this means that this player lost
 
                         int port = 31415;
-                        string ip = "44.221.170.210";
+                        string ip = "127.0.0.1";
                         Socket cs = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
                         cs.Connect(ep);
@@ -292,7 +292,7 @@ namespace ChessUI
                     if (result == DialogResult.Yes)
                     {
                         int port = 31415;
-                        string ip = "44.221.170.210";
+                        string ip = "127.0.0.1";
                         Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
                         ClientSocket.Connect(ep);

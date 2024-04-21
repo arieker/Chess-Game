@@ -173,10 +173,10 @@ namespace ChessUI
 
         private void MainForm_Paint(object sender, PaintEventArgs e)
         {
-            Image kingblack = Image.FromFile(@"Assets\king_black.png");
-            Image queenblack = Image.FromFile(@"Assets\queen_black.png");
-            Image kingwhite = Image.FromFile(@"Assets\king_white.png");
-            Image queenwhite = Image.FromFile(@"Assets\queen_white.png");
+            Image kingblack = Image.FromFile(@"../../Assets\king_black.png");
+            Image queenblack = Image.FromFile(@"../../Assets\queen_black.png");
+            Image kingwhite = Image.FromFile(@"../../Assets\king_white.png");
+            Image queenwhite = Image.FromFile(@"../../Assets\queen_white.png");
             Graphics g = e.Graphics;
             Brush blueBrush = Brushes.CornflowerBlue;
             Brush whiteBrush = Brushes.GhostWhite;
